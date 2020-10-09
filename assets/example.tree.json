@@ -1,0 +1,74 @@
+{
+  "$type": "AI.Items.Root",
+  "children": {
+    "$type": "AI.Items.Sequence",
+    "children": [
+      {
+        "$type": "AI.Items.Actions.PlayNarration",
+        "hooks": [
+          {
+            "$type": "AI.Hooks.Exit",
+            "action": {
+              "$type": "AI.Items.Actions.PlayNarration",
+              "$data.audio": 0
+            }
+          }
+        ],
+        "$data.audio": 0
+      },
+      {
+        "$type": "AI.Items.Conditional",
+        "invert": false,
+        "child": {
+          "$type": "AI.Items.Selector",
+          "children": [
+            {
+              "$type": "AI.Items.Sequence",
+              "children": [
+                {
+                  "$type": "AI.Items.Actions.PlayNarration",
+                  "$data.audio": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "$type": "AI.Items.Sequence",
+        "hooks": [
+          {
+            "$type": "AI.Hooks.Enter",
+            "action": {
+              "$type": "AI.Items.Actions.PlayNarration",
+              "$data.audio": 0
+            }
+          }
+        ],
+        "children": [
+          {
+            "$type": "AI.Items.Actions.PlayNarration",
+            "$data.audio": 0
+          },
+          {
+            "$type": "AI.Items.Conditional",
+            "conditions": [
+              {
+                "$type": "AI.Conditions.IsHungry"
+              },
+              {
+                "$type": "AI.Conditions.IsHungry"
+              }
+            ],
+            "invert": false,
+            "child": {
+              "$type": "AI.Items.Actions.PlayNarration",
+              "$data.audio": 0
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "$data.treeName": "default tree"
+}

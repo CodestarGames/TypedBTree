@@ -1,0 +1,110 @@
+#toolbox {
+    position: absolute;
+    left: 5px;
+    bottom: 35px;
+    width: 360px;
+    border-radius: 8px;
+    border: 4px solid #000;
+    background-color: #888;
+}
+
+#toolbox .element {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 98%;
+    background-color: #DDD;
+    border-radius: 4px;
+}
+
+/* Show cursor on buttons in the toolbox */
+#toolbox button {
+    cursor: pointer;
+    color: #000;
+    line-height: 15px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 98%;
+}
+
+#toolbox input {
+    display: inline-block;
+    width: 175px;
+    min-width: 175px;
+    font-size: 10pt;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+#toolbox #openscheme-container,
+#toolbox #opentree-container,
+#toolbox #exporttree-container,
+#toolbox #pack-container {
+    display: flex;
+    align-items: center;
+}
+
+#toolbox > .header {
+    margin: 5px;
+    font-size: 15pt;
+    font-weight: bold;
+    text-align: center;
+    color: #FFF;
+}
+
+#scheme-display {
+    overflow: scroll;
+    white-space: nowrap;
+    padding: 5px;
+    height: 250px;
+    margin: 5px;
+    border: 2px solid #000;
+    background-color: #BBB;
+}
+
+#scheme-display ul {
+    margin-block-start: 5px;
+    margin-block-end: 5px;
+    padding-inline-start: 20px;
+    margin: 2px;
+}
+
+#scheme-display .header {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#scheme-display .identifier {
+    font-size: 10pt;
+    margin-right: 5px;
+}
+
+#scheme-display .node-comment {
+    font-style: italic;
+    font-size: 10pt;
+}
+
+#scheme-display .field-type {
+    font-size: 10pt;
+    font-weight: bolder;
+    margin-right: 5px;
+}
+
+/* Show pointer to indicate that you can expand this entry */
+#scheme-display details summary {
+    cursor: pointer;
+}
+
+/* Hide the summary arrows on chrome */
+#scheme-display details summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Hide the summary arrows on firefox */
+#scheme-display details summary:first-of-type {
+    list-style-type: none;
+}

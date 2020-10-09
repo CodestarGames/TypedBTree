@@ -1,0 +1,184 @@
+#svg-display .node-background {
+    fill: #999;
+    rx: 10;
+    ry: 10;
+    stroke: #000;
+    stroke-width: 4;
+}
+
+#svg-display .tree-view-icon-action {
+    fill: rgb(42, 89, 218); !important;
+}
+
+#svg-display .tree-view-icon-condition {
+    fill: rgb(196, 199, 7); !important;
+}
+
+#svg-display .tree-view-icon-selector {
+    fill: rgb(143, 62, 209); !important;
+}
+
+#svg-display .tree-view-icon-sequence {
+    fill: rgb(158, 36, 107); !important;
+}
+
+#svg-display .tree-view-icon-parallel {
+    fill: rgb(66, 165, 211); !important;
+}
+
+#svg-display .tree-view-icon-repeat {
+    fill: rgb(224, 85, 115); !important;
+}
+
+#svg-display .tree-view-icon-while {
+    fill: rgb(224, 85, 115); !important;
+}
+
+#svg-display .tree-view-icon-root {
+    fill: rgb(99, 98, 104); !important;
+}
+
+#svg-display .tree-view-icon-flip {
+    fill: rgb(207, 144, 7); !important;
+}
+
+#svg-display .tree-view-icon-lotto {
+    fill: rgb(12, 185, 133); !important;
+}
+
+#svg-display .tree-view-icon-wait {
+    fill: rgb(224, 125, 248); !important;
+}
+
+#svg-display .nonenode-background {
+    fill: #555;
+    rx: 10;
+    ry: 10;
+    stroke: #000;
+    stroke-width: 4;
+}
+
+#svg-display .node-type {
+    font-weight: bold;
+    margin-left: 8%;
+    font-size: 12px;
+    width: 90%;
+    height: 80%;
+    background-color: #DDDDDD36;
+    cursor: pointer;
+    border: none;
+    margin-top: 6px;
+    color: white;
+    text-shadow: 1px 2px #46455c;
+}
+
+#svg-display .node-type > option {
+    color: white;
+    background: #3d444d;
+}
+
+/* Tooltip */
+#svg-display .node-info:hover .node-tooltip {
+    visibility: visible;
+}
+
+#svg-display .node-info .node-tooltip {
+    visibility: hidden;
+}
+
+#svg-display .node-tooltip-text {
+    display: inline-block;
+    font-size: 10px;
+    line-height: 12px;
+    padding: 5px;
+}
+
+#svg-display .node-tooltip-background {
+    fill: #DDD;
+    stroke: #000;
+    stroke-width: 2px;
+}
+
+/* Field backgrounds */
+#svg-display .string-value-background, #svg-display .stringArray-value-background {
+    fill: #696;
+    rx: 10;
+    ry: 10;
+    stroke: #000;
+    stroke-width: 2;
+}
+
+#svg-display .number-value-background, #svg-display .numberArray-value-background {
+    fill: #669;
+    rx: 10;
+    ry: 10;
+    stroke: #000;
+    stroke-width: 2;
+}
+
+#svg-display .boolean-value-background, #svg-display .booleanArray-value-background {
+    fill: #966;
+    rx: 10;
+    ry: 10;
+    stroke: #000;
+    stroke-width: 2;
+}
+
+#svg-display .node-value-background, #svg-display .nodeArray-value-background {
+    fill: #3d444d;
+    rx: 10;
+    ry: 10;
+    stroke: #000;
+    stroke-width: 2;
+}
+
+#svg-display .fieldname {
+    font-weight: bold;
+    white-space: pre;
+    pointer-events: none;
+    color: white;
+}
+
+/* Field values */
+#svg-display .string-value {
+    /*background-color: #DDD;*/
+    width: 90%;
+}
+
+#svg-display .number-value {
+    width: 90%;
+}
+
+#svg-display .enum-value {
+    width: 90%;
+}
+
+#svg-display .boolean-value {
+    cursor: pointer;
+}
+
+#svg-display .connection {
+    stroke: #000;
+    stroke-width: 4;
+    fill: none;
+}
+
+#svg-display .fieldvalue-button:hover {
+    fill: #fdfcfe;
+    cursor: pointer;
+}
+
+#svg-display .fieldvalue-button {
+    fill: #e7e6e8;
+}
+
+/* Number spinners cause more problems then they are worth in our case. For example in Safari they
+render in completely random locations when used inside a svg foreign-object. */
+#svg-display input::-webkit-outer-spin-button,
+#svg-display input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+#svg-display input[type=number] {
+    -moz-appearance: textfield;
+}
