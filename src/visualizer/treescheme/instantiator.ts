@@ -38,6 +38,7 @@ export function duplicateWithMissingFields(scheme: TreeScheme.IScheme, tree: Tre
             // Copy fields from the original if it has them, otherwise create defaults.
             definition.fields.forEach(f => {
                 const orgField = node.getField(f.name);
+                b.pushState(node.state);
                 if (orgField !== undefined) {
                     // 'node' and 'nodeArray' need deep-copying, the rest we can use as-is.
                     switch (orgField.kind) {
@@ -51,6 +52,8 @@ export function duplicateWithMissingFields(scheme: TreeScheme.IScheme, tree: Tre
                             b.pushField(orgField);
                             break;
                     }
+
+
                 } else {
                     // Not found in the original: create default.
                     b.pushField(instantiateDefaultField(f));

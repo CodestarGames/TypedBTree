@@ -82,33 +82,38 @@ function createNode(
     let backgroundClass = node.type === Tree.noneNodeType ? "nonenode-background" : "node-background";
 
     if(definition) {
-        if (definition.nodeType.indexOf('AI.Items.Actions') > -1)
-            backgroundClass += ' tree-view-icon-action';
 
-        if (definition.nodeType.indexOf('AI.Items.Repeat') > -1)
-            backgroundClass += ' tree-view-icon-repeat';
+        if(node.state !== 'ready'){
+            backgroundClass += ' ' + node.state;
+        }
+        else {
+            if (definition.nodeType.indexOf('AI.Items.Actions') > -1)
+                backgroundClass += ' tree-view-icon-action';
 
-        if (definition.nodeType.indexOf('AI.Items.Sequence') > -1)
-            backgroundClass += ' tree-view-icon-sequence';
+            if (definition.nodeType.indexOf('AI.Items.Repeat') > -1)
+                backgroundClass += ' tree-view-icon-repeat';
 
-        if (definition.nodeType.indexOf('AI.Items.Selector') > -1)
-            backgroundClass += ' tree-view-icon-selector';
+            if (definition.nodeType.indexOf('AI.Items.Sequence') > -1)
+                backgroundClass += ' tree-view-icon-sequence';
 
-        if (definition.nodeType.indexOf('AI.Items.Wait') > -1)
-            backgroundClass += ' tree-view-icon-wait';
+            if (definition.nodeType.indexOf('AI.Items.Selector') > -1)
+                backgroundClass += ' tree-view-icon-selector';
 
-        if (definition.nodeType.indexOf('AI.Items.Condition') > -1)
-            backgroundClass += ' tree-view-icon-condition';
+            if (definition.nodeType.indexOf('AI.Items.Wait') > -1)
+                backgroundClass += ' tree-view-icon-wait';
 
-        if (definition.nodeType.indexOf('AI.Items.Parallel') > -1)
-            backgroundClass += ' tree-view-icon-parallel';
+            if (definition.nodeType.indexOf('AI.Items.Condition') > -1)
+                backgroundClass += ' tree-view-icon-condition';
 
-        if (definition.nodeType.indexOf('AI.Items.Lotto') > -1)
-            backgroundClass += ' tree-view-icon-lotto';
+            if (definition.nodeType.indexOf('AI.Items.Parallel') > -1)
+                backgroundClass += ' tree-view-icon-parallel';
 
-        if (definition.nodeType.indexOf('AI.Items.Flip') > -1)
-            backgroundClass += ' tree-view-icon-flip';
+            if (definition.nodeType.indexOf('AI.Items.Lotto') > -1)
+                backgroundClass += ' tree-view-icon-lotto';
 
+            if (definition.nodeType.indexOf('AI.Items.Flip') > -1)
+                backgroundClass += ' tree-view-icon-flip';
+        }
     }
 
     nodeElement.addRect(backgroundClass, size, Vector.zeroVector);

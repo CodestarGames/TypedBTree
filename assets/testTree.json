@@ -17,5 +17,6 @@
       }
     ]
   },
-  "$data.treeName": "default tree"
+  "$data.treeName": "default tree",
+  "$blackboard": "{\"DelayTestAction\": async() => TypedBTree.State.SUCCEEDED}"
 }

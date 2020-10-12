@@ -71,5 +71,12 @@ export default class Parallel extends Composite {
             this.setState(succeededCount === this._children.length ? State.SUCCEEDED : State.RUNNING);
         }
     }
+    toJSON() {
+        return {
+            $type: "AI.Items.Parallel",
+            children: this._children,
+            state: this.getStateAsString()
+        }
+    }
 };
 

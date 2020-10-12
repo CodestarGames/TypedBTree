@@ -56,6 +56,14 @@ export default class Lotto extends Composite {
         // The state of the lotto node is the state of its winning child.
         this.setState(this.winningChild.getState());
     }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Lotto",
+            children: this._children,
+            state: this.getStateAsString()
+        }
+    }
 };
 
 interface IParticipant {
@@ -118,4 +126,5 @@ class LottoDraw {
         // Return a random item.
         return items[Math.floor(Math.random() * items.length)];
     }
+
 }

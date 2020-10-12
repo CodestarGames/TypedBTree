@@ -136,7 +136,7 @@ export class RootNodesBuilder {
 
     private getDecorators(hooks: Array<any>) {
         let decorators: Decorator[] = [];
-        hooks.forEach(hook => {
+        hooks && hooks.forEach(hook => {
             let decorator;
             switch (hook.$type) {
                 case "AI.Hooks.Until":

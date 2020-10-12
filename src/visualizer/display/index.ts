@@ -5,5 +5,6 @@
 import * as Svg from "./svg";
 import * as Tree from "./tree";
 import * as TreeScheme from "./treescheme";
+import * as Blackboard from "./blackboard";
 
-export { Svg, Tree, TreeScheme };
+export { Svg, Tree, Blackboard, TreeScheme };

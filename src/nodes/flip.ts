@@ -43,5 +43,13 @@ export default class Flip extends Composite {
                 this.setState(State.READY);
         }
     }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Flip",
+            child: this._child,
+            state: this.getStateAsString()
+        }
+    }
 };
 

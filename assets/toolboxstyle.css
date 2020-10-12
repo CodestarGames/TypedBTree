@@ -108,3 +108,15 @@
 #scheme-display details summary:first-of-type {
     list-style-type: none;
 }
+
+#blackboard {
+    position: absolute;
+    left: 5px;
+    top: 35px;
+    width: 1080px;
+    height: 720px;
+    border-radius: 8px;
+    border: 4px solid #000;
+    background-color: #141414ba;
+
+}

@@ -18,5 +18,6 @@ export default abstract class Leaf extends Node {
 
     onUpdate(board: any) {
     }
+    abstract toJSON();
 };
 

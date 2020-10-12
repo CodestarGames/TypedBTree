@@ -2,7 +2,7 @@ import Node from './node'
 import {State} from "../state";
 import Exit from "../decorators/exit";
 
-export default class Composite extends Node {
+export default abstract class Composite extends Node {
     protected _children: any;
     onUpdate(board: any) {
         throw new Error('Method not implemented.');
@@ -60,5 +60,7 @@ export default class Composite extends Node {
     getName() {
 
     }
+
+    abstract toJSON();
 };
 

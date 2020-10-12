@@ -7,47 +7,60 @@
 }
 
 #svg-display .tree-view-icon-action {
-    fill: rgb(42, 89, 218); !important;
+    fill: rgb(42, 89, 218) !important;
 }
 
 #svg-display .tree-view-icon-condition {
-    fill: rgb(196, 199, 7); !important;
+    fill: rgb(196, 199, 7) !important;
 }
 
 #svg-display .tree-view-icon-selector {
-    fill: rgb(143, 62, 209); !important;
+    fill: rgb(143, 62, 209) !important;
 }
 
 #svg-display .tree-view-icon-sequence {
-    fill: rgb(158, 36, 107); !important;
+    fill: rgb(158, 36, 107) !important;
 }
 
 #svg-display .tree-view-icon-parallel {
-    fill: rgb(66, 165, 211); !important;
+    fill: rgb(66, 165, 211) !important;
 }
 
 #svg-display .tree-view-icon-repeat {
-    fill: rgb(224, 85, 115); !important;
+    fill: rgb(224, 85, 115) !important;
 }
 
 #svg-display .tree-view-icon-while {
-    fill: rgb(224, 85, 115); !important;
+    fill: rgb(224, 85, 115) !important;
 }
 
 #svg-display .tree-view-icon-root {
-    fill: rgb(99, 98, 104); !important;
+    fill: rgb(99, 98, 104) !important;
 }
 
 #svg-display .tree-view-icon-flip {
-    fill: rgb(207, 144, 7); !important;
+    fill: rgb(207, 144, 7) !important;
 }
 
 #svg-display .tree-view-icon-lotto {
-    fill: rgb(12, 185, 133); !important;
+    fill: rgb(12, 185, 133) !important;
 }
 
 #svg-display .tree-view-icon-wait {
-    fill: rgb(224, 125, 248); !important;
+    fill: rgb(224, 125, 248) !important;
+}
+
+
+#svg-display .running {
+    fill: #a0ceff !important;
+}
+
+#svg-display .failed {
+    fill: rgb(131, 0, 0) !important;
+}
+
+#svg-display .succeeded {
+    fill: rgb(29, 145, 0) !important;
 }
 
 #svg-display .nonenode-background {

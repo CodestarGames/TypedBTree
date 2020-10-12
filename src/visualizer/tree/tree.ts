@@ -70,6 +70,7 @@ export interface INode {
     readonly type: NodeType;
     readonly fields: ReadonlyArray<Field>;
     readonly fieldNames: ReadonlyArray<string>;
+    state: string;
 
     getField(name: string): Field | undefined;
     getChild(output: IFieldElementIdentifier): INode | undefined;
@@ -141,6 +142,7 @@ export interface INodeBuilder {
     pushBooleanArrayField(name: string, value: ReadonlyArray<boolean>): boolean;
     pushNodeArrayField(name: string, value: ReadonlyArray<INode>): boolean;
     pushField(field: Field): boolean;
+    pushState(objElement: string): void;
 }
 
 /**
@@ -151,7 +153,7 @@ export interface INodeBuilder {
  */
 export function createNode(type: NodeType, callback?: (builder: INodeBuilder) => void): INode {
     if (callback === undefined) {
-        return new NodeImpl(type, []);
+        return new NodeImpl(type, [], '');
     }
     const builder = new NodeBuilderImpl(type);
     callback(builder);
@@ -164,7 +166,7 @@ export function createNode(type: NodeType, callback?: (builder: INodeBuilder) =>
  * @returns Newly constructed (immutable) none-node.
  */
 export function createNoneNode(): INode {
-    return new NodeImpl(noneNodeType, []);
+    return new NodeImpl(noneNodeType, [], '');
 }
 
 /**
@@ -308,8 +310,9 @@ class NodeImpl implements INode {
     private readonly _type: NodeType;
     private readonly _fields: ReadonlyArray<Field>;
     private uid: string;
+    private _state: string;
 
-    constructor(type: NodeType, fields: ReadonlyArray<Field>) {
+    constructor(type: NodeType, fields: ReadonlyArray<Field>, state?: string) {
         if (type === "") {
             throw new Error("Node must has a type");
         }
@@ -319,6 +322,7 @@ class NodeImpl implements INode {
         if (Utils.hasDuplicates(fields.map(getFieldName))) {
             throw new Error("Field names must be unique");
         }
+        this._state = state;
         this._type = type;
         this._id = type;
         this.uid = createNodeUid();
@@ -336,6 +340,10 @@ class NodeImpl implements INode {
 
     get type(): NodeType {
         return this._type;
+    }
+
+    get state(){
+        return this._state;
     }
 
     get fields(): ReadonlyArray<Field> {
@@ -383,6 +391,7 @@ class NodeBuilderImpl implements INodeBuilder {
     private readonly _type: NodeType;
     private _fields: Field[];
     private _build: boolean;
+    private _state: string;
 
     constructor(type: NodeType) {
         this._type = type;
@@ -392,6 +401,11 @@ class NodeBuilderImpl implements INodeBuilder {
     public pushStringField(name: string, value: string): boolean {
         const field: Field = { kind: "string", name, value };
         return this.pushField(field);
+    }
+
+    public pushState(value: string) : void {
+
+        this._state = value;
     }
 
     public pushNumberField(name: string, value: number): boolean {
@@ -446,6 +460,7 @@ class NodeBuilderImpl implements INodeBuilder {
 
     public build(): INode {
         this._build = true;
-        return new NodeImpl(this._type, this._fields);
+        this._fields = this._fields.filter(item => item.name !== 'state');
+        return new NodeImpl(this._type, this._fields, this._state);
     }
 }

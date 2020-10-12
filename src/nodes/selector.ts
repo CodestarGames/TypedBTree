@@ -65,5 +65,13 @@ export default class Selector extends Composite {
             throw "Error: child node was not in an expected state.";
         }
     }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Selector",
+            children: this._children,
+            state: this.getStateAsString()
+        }
+    }
 };
 

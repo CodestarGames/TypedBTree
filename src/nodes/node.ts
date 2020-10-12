@@ -112,6 +112,23 @@ export default abstract class Node {
     return this.state;
   }
 
+  getStateAsString() {
+    const convertNodeStateToString = (state) => {
+      switch (state) {
+        case State.RUNNING:
+          return "running";
+        case State.SUCCEEDED:
+          return "succeeded";
+        case State.FAILED:
+          return "failed";
+        default:
+          return "ready";
+      }
+    };
+
+    return convertNodeStateToString(this.state);
+  }
+
   getType() {
     return this._type;
   }
@@ -154,7 +171,7 @@ export default abstract class Node {
   }
 
   abstract onUpdate(board: any)
-
+  abstract toJSON();
 };
 
 /**

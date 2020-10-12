@@ -70,6 +70,9 @@ function parseNode(obj: any): Tree.INode {
 
     return Tree.createNode(type, b => {
         Object.keys(obj).forEach(key => {
+            if(key === 'state'){
+                b.pushState(obj[key]);
+            }
             if (key !== "$type") {
                 const field = parseField(key, obj[key]);
                 if (field !== undefined) {

@@ -85,7 +85,7 @@
           "isArray": false
         },
         {
-          "name": "treeName",
+          "name": "$data.treeName",
           "valueType": "string"
         }
       ]

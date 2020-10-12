@@ -46,6 +46,7 @@ export default function () {
         (window as any).enqueueExportPack = App.enqueueExportPack;
         (window as any).enqueueCopyTreeToClipboard = App.enqueueCopyTreeToClipboard;
         (window as any).enqueuePasteTree = App.enqueuePasteTree;
+        (window as any).enqueueRuntimeTree = App.enqueueRuntimeTree;
         (window as any).enqueueShareToClipboard = App.enqueueShareToClipboard;
         (window as any).enqueueUndo = App.enqueueUndo;
         (window as any).enqueueRedo = App.enqueueRedo;
@@ -54,6 +55,8 @@ export default function () {
         const url = new URL(location.href);
         const searchParams = url.searchParams;
         history.replaceState("", "", url.origin + url.pathname.replace("index.html", ""));
+
+        Display.Blackboard.initialize();
 
         // Starting running the app.
         App.run(searchParams);

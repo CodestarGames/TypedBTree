@@ -27,5 +27,12 @@ export default class Condition extends Leaf {
             throw `cannot update condition node as function '${this._condition}' is not defined in the blackboard`;
         }
     }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Conditions." + this._condition,
+            state: this.getStateAsString()
+        }
+    }
 };
 

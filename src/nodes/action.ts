@@ -3,6 +3,14 @@ import {State} from "../state";
 import Decorator from "../decorators/decorator";
 
 export default class Action extends Leaf {
+    toJSON(){
+        return {
+            $type: "AI.Items.Actions." + this._actionName,
+            ...this._actionData,
+            state: this.getStateAsString()
+        }
+    };
+
     private readonly _actionName: any;
     private readonly _actionData: any;
     private updatePromiseStateResult: null;

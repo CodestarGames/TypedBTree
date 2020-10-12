@@ -54,5 +54,13 @@ export default class Wait extends Leaf {
             this.setState(State.SUCCEEDED);
         }
     }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Lotto",
+            duration: this._duration,
+            state: this.getStateAsString()
+        }
+    }
 };
 

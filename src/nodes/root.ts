@@ -2,7 +2,7 @@ import Composite from './composite'
 import {State} from "../state";
 
 export default class Root extends Composite {
-    private _child: any;
+    private readonly _child: any;
     /**
      * A Root node.
      * The root node will have a single child.
@@ -28,6 +28,14 @@ export default class Root extends Composite {
 
         // The state of the root node is the state of its child.
         this.setState(this._child.getState());
+    }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Root",
+            "children": this._child,
+            state: this.getStateAsString()
+        }
     }
 };
 

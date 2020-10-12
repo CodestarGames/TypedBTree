@@ -65,5 +65,13 @@ export default class Sequence extends Composite {
             throw "Error: child node was not in an expected state.";
         }
     }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Sequence",
+            children: this._children,
+            state: this.getStateAsString()
+        }
+    }
 };
 

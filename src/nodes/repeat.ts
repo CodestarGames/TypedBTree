@@ -120,5 +120,14 @@ export default class Repeat extends Composite {
             this.targetIterationCount = null;
         }
     }
+
+    toJSON() {
+        return {
+            $type: "AI.Items.Repeat",
+            times: this._iterations,
+            children: this._children,
+            state: this.getStateAsString()
+        }
+    }
 };
 

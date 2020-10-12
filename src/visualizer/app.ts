@@ -33,6 +33,7 @@ export async function run(searchParams: URLSearchParams): Promise<void> {
     // Subscribe to navigation controls.
     window.onkeydown = onDomKeyPress;
     Utils.Dom.subscribeToClick("focus-button", focusTree);
+    Utils.Dom.subscribeToClick("blackboard-toggle", toggleBlackboard);
     Utils.Dom.subscribeToClick("zoomin-button", () => { Display.Tree.zoom(0.1); });
     Utils.Dom.subscribeToClick("zoomout-button", () => { Display.Tree.zoom(-0.1); });
     Utils.Dom.subscribeRangeInput("zoomspeed-slider", setZoomSpeed);
@@ -40,6 +41,7 @@ export async function run(searchParams: URLSearchParams): Promise<void> {
     Utils.Dom.subscribeToClick("redo-button", enqueueRedo);
 
     toggleToolbox()
+    toggleBlackboard()
 
     switch (mode) {
         case Mode.Normal:
@@ -52,6 +54,7 @@ export async function run(searchParams: URLSearchParams): Promise<void> {
 
             Utils.Dom.subscribeToClick("share-button", enqueueShareToClipboard);
             Utils.Dom.subscribeToClick("toolbox-toggle", toggleToolbox);
+            Utils.Dom.subscribeToClick("blackboard-toggle", toggleBlackboard);
 
             // Subscribe to controls on the toolbox.
             Utils.Dom.subscribeToFileInput("openscheme-file", file => {
@@ -76,7 +79,6 @@ export async function run(searchParams: URLSearchParams): Promise<void> {
             Utils.Dom.hideElementById("toolbox");
             Utils.Dom.hideElementById("toolbox-toggle");
             Utils.Dom.hideElementById("share-button");
-            Utils.Dom.hideElementById("github-button");
 
             // Disable undo / redo until a tree has been loaded.
             Utils.Dom.setButtonDisabled("undo-button", true);
@@ -360,6 +362,25 @@ export function enqueuePasteTree(): void {
     });
 }
 
+/** Paste a tree from clipboard. */
+export function enqueueRuntimeTree(tree: any): void {
+    sequencer.enqueue(async () => {
+        if (currentScheme === undefined) {
+            alert("Failed to paste tree. Error: No scheme loaded");
+            return;
+        }
+
+        if (tree !== undefined && tree !== "") {
+            const result = await Tree.Parser.parseJson(tree);
+            if (result.kind === "error") {
+                alert(`Failed to parse tree. Error: ${result.errorMessage}`);
+            } else {
+                openTree(result.value, "runtime.tree.json");
+            }
+        }
+    });
+}
+
 /** Load a pack containing both a scheme and a tree. */
 export function enqueueLoadPackFromUrlOrFile(source: string | File): void {
     const name = typeof source === "string" ? source : source.name;
@@ -527,6 +548,18 @@ function toggleToolbox(): void {
         toolbox.style.visibility = "visible";
     } else {
         toolbox.style.visibility = "hidden";
+    }
+}
+
+function toggleBlackboard(): void {
+    const blackboard = document.getElementById("blackboard");
+    if (blackboard === null) {
+        throw new Error("Unable to find 'blackboard'");
+    }
+    if (blackboard.style.visibility === "hidden") {
+        blackboard.style.visibility = "visible";
+    } else {
+        blackboard.style.visibility = "hidden";
     }
 }
 
