@@ -46,8 +46,9 @@ export default class Flip extends Composite {
 
     toJSON() {
         return {
+            hooks: this.getDecorators(),
             $type: "AI.Items.Flip",
-            child: this._child,
+            children: this._child,
             state: this.getStateAsString()
         }
     }

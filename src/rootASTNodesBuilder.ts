@@ -178,7 +178,7 @@ export const ASTNodeFactories = {
 
             // A repeat node must have a positive number of iterations if defined.
             if (this.iterations !== null && this.iterations < 0) {
-                throw "a repeat node must have a positive number of iterations if defined";
+                this.iterations = null;
             }
 
             // There is validation to carry out if a longest duration was defined.

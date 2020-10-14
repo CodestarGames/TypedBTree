@@ -54,7 +54,7 @@ export default function () {
         // Parse the search-params from the url and cleanup browser url.
         const url = new URL(location.href);
         const searchParams = url.searchParams;
-        history.replaceState("", "", url.origin + url.pathname.replace("index.html", ""));
+        //history.replaceState("", "", url.origin + url.pathname.replace("index.html", ""));
 
         Display.Blackboard.initialize();
 

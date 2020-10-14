@@ -93,11 +93,11 @@ export class RootNodesBuilder {
 
             }
 
-            if (item['$type'].indexOf('AI.Items.Conditions')  > -1) {
+            if (item['$type'].indexOf('AI.Items.Condition')  > -1) {
                 node = ASTNodeFactories.CONDITION();
                 this.stack[this.stack.length-1].push(node);
 
-                node.conditionFunction = item['$type'].split(".").reverse()[0]
+                node.conditionFunction = item['condition']['$type'];
 
                 // Try to pick any decorators off of the token stack.
                 node.decorators = this.getDecorators(item.hooks);
@@ -121,6 +121,10 @@ export class RootNodesBuilder {
 
     private handleChildren(node: any, item: any) {
         this.stack[this.stack.length - 1].push(node);
+
+        if(typeof item.children === 'object' && Array.isArray(item.children) === false){
+            item.children = [item.children];
+        }
 
         this.stack.push(node.children);
 

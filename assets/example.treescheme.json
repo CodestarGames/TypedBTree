@@ -16,7 +16,7 @@
         "AI.Items.Wait",
         "AI.Items.Flip",
         "AI.Items.Lotto",
-        "AI.Items.Conditional",
+        "AI.Items.Condition",
         "AI.Items.Repeat",
         "AI.Items.Actions.PlayNarration",
         "AI.Items.Actions.DelayTestAction"
@@ -143,21 +143,13 @@
       ]
     },
     {
-      "nodeType": "AI.Items.Conditional",
-      "comment": "Invoke the child if the given conditions are true",
+      "nodeType": "AI.Items.Condition",
+      "comment": "Return SUCCESS if condition passes",
       "fields": [
         {
-          "name": "conditions",
+          "name": "condition",
           "valueType": "AI.Condition",
-          "isArray": true
-        },
-        {
-          "name": "invert",
-          "valueType": "boolean"
-        },
-        {
-          "name": "child",
-          "valueType": "AI.Item"
+          "isArray": false
         }
       ]
     },
@@ -189,11 +181,6 @@
         {
           "name": "$data.duration",
           "valueType": "number"
-        },
-        {
-          "name": "children",
-          "valueType": "AI.Item",
-          "isArray": true
         }
       ]
     },
@@ -207,7 +194,7 @@
           "isArray":true
         },
         {
-          "name": "child",
+          "name": "children",
           "valueType": "AI.Item",
           "isArray": false
         }
@@ -221,6 +208,10 @@
           "name": "hooks",
           "valueType": "AI.Hook",
           "isArray":true
+        },
+        {
+          "name": "$data.tickets",
+          "valueType": "string"
         },
         {
           "name": "children",

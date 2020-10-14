@@ -68,6 +68,7 @@ export default class Sequence extends Composite {
 
     toJSON() {
         return {
+            hooks: this.getDecorators(),
             $type: "AI.Items.Sequence",
             children: this._children,
             state: this.getStateAsString()

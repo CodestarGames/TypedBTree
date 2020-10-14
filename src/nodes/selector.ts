@@ -68,6 +68,7 @@ export default class Selector extends Composite {
 
     toJSON() {
         return {
+            hooks: this.getDecorators(),
             $type: "AI.Items.Selector",
             children: this._children,
             state: this.getStateAsString()

@@ -27,6 +27,8 @@
   <button type="button" class="control-element" id="toolbox-toggle">Toolbox</button>
 
   <button type="button" class="control-element" id="blackboard-toggle">Blackboard</button>
+  <button type="button" class="control-element" id="play-toggle" onclick="onPlayButtonPressed()">Play</button>
+  <button type="button" class="control-element" id="reload-toggle" onclick="reloadVisualiser()">Reload</button>
 
   <!-- Button to focus the view -->
   <button type="button" class="control-element" id="focus-button">Focus</button>
@@ -127,8 +129,10 @@
 
     // Set a test blackboard in the blackboard text area.
     let blackboardText = `{
-    "DelayTestAction": async() => TypedBTree.State.SUCCEEDED
-}`;
+      "DelayTestAction": async() => TypedBTree.State.SUCCEEDED,
+      "PlayNarration": async() => TypedBTree.State.FAILED,
+      "AI.Conditions.IsHungry": () => true
+    }`;
 
     let editor = ace.edit("blackboard", {
       theme: "ace/theme/twilight",
@@ -136,6 +140,21 @@
     });
     editor.setOption("showPrintMargin", false);
     editor.setValue(blackboardText);
+
+    function loadTree() {
+      // Create the blackboard.
+      const blackboard = (new Function("IsKeyPressed", `return (${editor.getValue()});`))((keyCode) => {
+        return window.allPressedKeyCodes[keyCode];
+      });
+
+      if(window.getCurrentTreeJson()){
+        definition = window.getCurrentTreeJson();
+      }
+
+      // Try to create the behaviour tree.
+      behaviourTree = new TypedBTree.BehaviourTree(definition, blackboard);
+      window.enqueueRuntimeTree(JSON.stringify(behaviourTree._rootNode), true);
+    }
 
     /**
      * Reload the visualiser.
@@ -149,14 +168,7 @@
         playIntervalId = null;
       }
 
-      // Create the blackboard.
-      const blackboard = (new Function("IsKeyPressed", `return (${blackboardText});`))((keyCode) => {
-        return window.allPressedKeyCodes[keyCode];
-      });
-
-      // Try to create the behaviour tree.
-      behaviourTree = new TypedBTree.BehaviourTree(definition, blackboard);
-      window.enqueueRuntimeTree(JSON.stringify(behaviourTree._rootNode))
+      loadTree()
 
       // Build the tree view.
       buildTreeView();
@@ -171,8 +183,8 @@
         return;
       }
 
-      // Reset the tree.
-      behaviourTree.reset();
+      //reset the tree
+      loadTree();
 
       // Get an interval duration with which to step the tree.
       let interval = prompt("Please enter a step interval in milliseconds", "100");
@@ -217,30 +229,7 @@
      * Build the tree view.
      */
     function buildTreeView() {
-
-      // Get the behaviour tree details as an array of flattened nodes.
-      const nodes = behaviourTree.getFlattenedNodeDetails();
-
-      // A function to convert a node state to a string.
-      const convertNodeStateToString = (state) => {
-        switch (state) {
-          case TypedBTree.State.RUNNING:
-            return "running";
-          case TypedBTree.State.SUCCEEDED:
-            return "succeeded";
-          case TypedBTree.State.FAILED:
-            return "failed";
-          default:
-            return "ready";
-        }
-      };
-
-      setInterval(() => {
-        behaviourTree.step();
-        window.enqueueRuntimeTree(JSON.stringify(behaviourTree._rootNode))
-      }, 1000)
-
-
+        window.enqueueRuntimeTree(JSON.stringify(behaviourTree._rootNode), false)
     };
 
 
@@ -252,6 +241,18 @@
     window.onkeydown = function (event) {
       this.allPressedKeyCodes[event.keyCode] = true;
     }
+
+    /**
+     * Set the running state of the editor.
+     */
+    function setRunningState(isRunning) {
+      if (isRunning) {
+
+      } else {
+
+      }
+
+    };
 
     // Do the initial visualiser reload.
     reloadVisualiser();

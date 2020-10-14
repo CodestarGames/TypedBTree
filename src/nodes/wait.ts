@@ -57,8 +57,9 @@ export default class Wait extends Leaf {
 
     toJSON() {
         return {
-            $type: "AI.Items.Lotto",
-            duration: this._duration,
+            hooks: this.getDecorators(),
+            $type: "AI.Items.Wait",
+            "$data.duration": this._duration,
             state: this.getStateAsString()
         }
     }

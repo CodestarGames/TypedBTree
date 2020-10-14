@@ -40,4 +40,12 @@ export default class Entry extends Decorator {
             throw `cannot call entry decorator function '${this.functionName}' is not defined in the blackboard`;
         }
     };
+
+    //TODO: come back to these
+    toJSON(){
+        return {
+            "$type": "AI.Hooks.Entry",
+            "action": this.getFunctionName()
+        }
+    }
 };

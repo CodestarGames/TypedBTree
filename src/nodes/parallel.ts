@@ -73,6 +73,7 @@ export default class Parallel extends Composite {
     }
     toJSON() {
         return {
+            hooks: this.getDecorators(),
             $type: "AI.Items.Parallel",
             children: this._children,
             state: this.getStateAsString()

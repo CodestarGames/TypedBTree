@@ -363,7 +363,7 @@ export function enqueuePasteTree(): void {
 }
 
 /** Paste a tree from clipboard. */
-export function enqueueRuntimeTree(tree: any): void {
+export function enqueueRuntimeTree(tree: any, focus?: boolean): void {
     sequencer.enqueue(async () => {
         if (currentScheme === undefined) {
             alert("Failed to paste tree. Error: No scheme loaded");
@@ -375,7 +375,7 @@ export function enqueueRuntimeTree(tree: any): void {
             if (result.kind === "error") {
                 alert(`Failed to parse tree. Error: ${result.errorMessage}`);
             } else {
-                openTree(result.value, "runtime.tree.json");
+                openTree(result.value, "runtime.tree.json", focus);
             }
         }
     });

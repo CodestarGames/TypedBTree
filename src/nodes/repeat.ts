@@ -123,9 +123,10 @@ export default class Repeat extends Composite {
 
     toJSON() {
         return {
+            hooks: this.getDecorators(),
             $type: "AI.Items.Repeat",
-            times: this._iterations,
-            children: this._children,
+            "$data.times": this._iterations,
+            children: this._child,
             state: this.getStateAsString()
         }
     }

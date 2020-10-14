@@ -48,4 +48,11 @@ export default class While extends Decorator {
         }
     };
 
+    toJSON(){
+        return {
+            "$type": "AI.Hooks.While",
+            "condition": this.condition && { $type: this.condition }
+        }
+    }
+
 };

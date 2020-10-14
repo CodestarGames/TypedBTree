@@ -59,7 +59,9 @@ export default class Lotto extends Composite {
 
     toJSON() {
         return {
+            hooks: this.getDecorators(),
             $type: "AI.Items.Lotto",
+            "$data.tickets": this._tickets,
             children: this._children,
             state: this.getStateAsString()
         }

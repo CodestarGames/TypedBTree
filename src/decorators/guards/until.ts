@@ -47,4 +47,11 @@ export default class Until extends Decorator {
             throw `cannot evaluate node guard as function '${this.condition}' is not defined in the blackboard`;
         }
     };
+
+    toJSON(){
+        return {
+            "$type": "AI.Hooks.Until",
+            "condition": this.condition && { $type: this.condition }
+        }
+    }
 };
