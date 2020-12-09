@@ -19,6 +19,8 @@
         "AI.Items.Condition",
         "AI.Items.Repeat",
         "AI.Items.Actions.PlayNarration",
+        "AI.Items.Actions.Say",
+        "AI.Items.Actions.Prompt",
         "AI.Items.Actions.DelayTestAction"
       ]
     },
@@ -26,13 +28,15 @@
       "identifier": "AI.Action",
       "values": [
         "AI.Items.Actions.PlayNarration",
+        "AI.Items.Actions.Say",
+        "AI.Items.Actions.Prompt",
         "AI.Items.Actions.DelayTestAction"
       ]
     },
     {
       "identifier": "AI.Hook",
       "values": [
-        "AI.Hooks.Enter",
+        "AI.Hooks.Entry",
         "AI.Hooks.Exit",
         "AI.Hooks.Step",
         "AI.Hooks.While",
@@ -57,6 +61,23 @@
         {
           "value": 1,
           "name": "Goodbye.mp3"
+        }
+      ]
+    },
+    {
+      "identifier": "AI.Characters.Portrait",
+      "values": [
+        {
+          "value": 0,
+          "name": "Sonata"
+        },
+        {
+          "value": 1,
+          "name": "Arthur"
+        },
+        {
+          "value": 2,
+          "name": "Enemy1"
         }
       ]
     },
@@ -236,6 +257,44 @@
       ]
     },
     {
+      "nodeType": "AI.Items.Actions.Say",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.portraits",
+          "valueType": "AI.Characters.Portrait",
+          "isArray": true
+        },
+        {
+          "name": "$data.text",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Actions.Prompt",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.portraits",
+          "valueType": "AI.Characters.Portrait",
+          "isArray": true
+        },
+        {
+          "name": "$data.text",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
       "nodeType": "AI.Items.Actions.DelayTestAction",
       "fields": [
         {
@@ -250,7 +309,7 @@
       ]
     },
     {
-      "nodeType": "AI.Hooks.Enter",
+      "nodeType": "AI.Hooks.Entry",
       "fields": [
         {
           "name": "action",

@@ -6,10 +6,12 @@ import Decorator from './decorator'
  */
 export default class Entry extends Decorator {
     private functionName: any;
+    private _fnData: any;
 
-    constructor(functionName) {
+    constructor(functionName, fnData) {
         super();
         this.functionName = functionName;
+        this._fnData = fnData;
     }
 
     /**
@@ -35,7 +37,7 @@ export default class Entry extends Decorator {
     callBlackboardFunction = (board) => {
         // Call the blackboard function if it exists.
         if (typeof board[this.functionName] === "function") {
-            board[this.functionName].call(board);
+            board[this.functionName].call(board, this._fnData);
         } else {
             throw `cannot call entry decorator function '${this.functionName}' is not defined in the blackboard`;
         }

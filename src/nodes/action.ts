@@ -5,7 +5,7 @@ import Decorator from "../decorators/decorator";
 export default class Action extends Leaf {
     toJSON(){
         return {
-            $type: "AI.Items.Actions." + this._actionName,
+            $type: this._actionName,
             ...this._actionData,
             state: this.getStateAsString()
         }

@@ -84,7 +84,7 @@ export class RootNodesBuilder {
                 node = ASTNodeFactories.ACTION();
                 this.stack[this.stack.length-1].push(node);
 
-                node.actionName = item['$type'].split(".").reverse()[0];
+                node.actionName = item['$type'];//.split(".").reverse()[0];
                 let {$type, ...theRest} = item;
                 node.props = theRest;
 
@@ -152,15 +152,18 @@ export class RootNodesBuilder {
                     decorators.push(decorator);
                     break;
                 case "AI.Hooks.Entry":
-                    decorator = DecoratorFactories.ENTRY(hook.action.$type);
+                    var {$type, ...theRest} = hook.action;
+                    decorator = DecoratorFactories.ENTRY($type, theRest);
                     decorators.push(decorator);
                     break;
                 case "AI.Hooks.Step":
-                    decorator = DecoratorFactories.STEP(hook.action.$type);
+                    var {$type, ...theRest} = hook.action;
+                    decorator = DecoratorFactories.STEP($type, theRest);
                     decorators.push(decorator);
                     break;
                 case "AI.Hooks.Exit":
-                    decorator = DecoratorFactories.EXIT(hook.action.$type);
+                    var {$type, ...theRest} = hook.action;
+                    decorator = DecoratorFactories.EXIT($type, theRest);
                     decorators.push(decorator);
                     break;
                 }

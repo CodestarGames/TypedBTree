@@ -21,9 +21,9 @@ import Leaf from "./nodes/leaf";
 export const DecoratorFactories = {
     "WHILE": (condition) => new While(condition),
     "UNTIL": (condition) => new Until(condition),
-    "ENTRY": (functionName) => new Entry(functionName),
-    "EXIT": (functionName) => new Exit(functionName),
-    "STEP": (functionName) => new Step(functionName)
+    "ENTRY": (functionName, fnData) => new Entry(functionName, fnData),
+    "EXIT": (functionName, fnData) => new Exit(functionName, fnData),
+    "STEP": (functionName, fnData) => new Step(functionName, fnData)
 };
 type ValidatorFunc = (depth: any) => void;
 type NodeFunc = (namedRootNodeProvider: any, visitedBranches: any) => (Node | Leaf | null);
