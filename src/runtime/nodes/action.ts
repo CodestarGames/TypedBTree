@@ -113,7 +113,7 @@ export default class Action extends Leaf {
                     }
 
                     // Check to make sure the result is a valid finished state.
-                    if (result !== State.SUCCEEDED && result !== State.FAILED) {
+                    if (result.toString() !== State.SUCCEEDED.toString() && result.toString() !== State.FAILED.toString()) {
                         throw "action node promise resolved with an invalid value, expected a State.SUCCEEDED or State.FAILED value to be returned";
                     }
 

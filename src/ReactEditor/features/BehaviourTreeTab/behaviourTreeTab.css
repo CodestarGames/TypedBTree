@@ -1,0 +1,132 @@
+.b-t-tab-treeview {}
+
+.b-t-tab-treeview .children {
+    border: solid 1px white;
+    background: #4c4c4c;
+}
+
+.f-no-select {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.b-t-tab-treeview .m-tree {
+  position: relative;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
+}
+
+.b-t-tab-treeview .m-draggable {
+  position: absolute;
+  opacity: 0.8;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.b-t-tab-treeview .m-node.placeholder > * {
+  visibility: hidden;
+}
+
+.b-t-tab-treeview .field-editor {
+  display: flex;
+  flex-direction: column;
+  border: solid 2px white;
+  margin-top: 4px;
+  background: cadetblue;
+  padding: 4px;
+}
+
+.b-t-tab-treeview .hooks {
+  background: cornflowerblue;
+  border: solid 2px black;
+  margin-top: 8px;
+}
+
+.b-t-tab-treeview .m-node.placeholder {
+  border: 1px dashed #ccc;
+}
+
+.b-t-tab-treeview .m-node .inner {
+  position: relative;
+  cursor: pointer;
+  padding-left: 24px;
+  padding-bottom: 12px;
+  background: darkgray;
+  border: solid 1px white;
+}
+
+.b-t-tab-treeview .m-node .collapse {
+  position: absolute;
+  left: 0;
+  cursor: pointer;
+}
+
+.b-t-tab-treeview .m-node {
+    list-style-image: url('../../../../assets/tree_lines_16x16.png');
+    display: list-item;
+}
+
+.b-t-tab-treeview .m-node .caret-right:before {
+  content: '\25B8';
+}
+
+.b-t-tab-treeview .m-node .caret-down:before {
+  content: '\25BE';
+}
+
+
+
+.b-t-tab-treeview .tree-view-icon-action {
+  color: rgb(42, 89, 218) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-condition {
+  color: rgb(196, 199, 7) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-selector {
+  color: rgb(143, 62, 209) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-sequence {
+  color: rgb(158, 36, 107) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-parallel {
+  color: rgb(66, 165, 211) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-repeat {
+  color: rgb(224, 85, 115) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-while {
+  color: rgb(224, 85, 115) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-root {
+  color: rgb(99, 98, 104) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-flip {
+  color: rgb(207, 144, 7) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-lotto {
+  color: rgb(12, 185, 133) !important;
+}
+
+.b-t-tab-treeview .tree-view-icon-wait {
+  color: rgb(224, 125, 248) !important;
+}

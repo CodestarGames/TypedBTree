@@ -6,7 +6,7 @@
  * Create a new array that contains all the elements from the previous but with the given element
  * replaced.
  * @param array Source array.
- * @param index Index of the element to replace.
+ * @param index Treeview of the element to replace.
  * @param data Data for the new element.
  * @returns New array with the changed element.
  */
@@ -22,7 +22,7 @@ export function withReplacedElement<T>(array: ReadonlyArray<T>, index: number, d
 /**
  * Create a new array that contains all the elements and an extra element at the given index.
  * @param array Source array.
- * @param index Index to insert the element at.
+ * @param index Treeview to insert the element at.
  * @param data New element.
  * @returns New array with the extra element.
  */
@@ -38,7 +38,7 @@ export function withExtraElement<T>(array: ReadonlyArray<T>, index: number, data
 /**
  * Create a new array that contains all elements from the given array except the one at the given index.
  * @param array Source array.
- * @param index Index of the element to remove.
+ * @param index Treeview of the element to remove.
  * @returns New array without one of the elements.
  */
 export function withoutElement<T>(array: ReadonlyArray<T>, index: number): T[] {
@@ -53,8 +53,8 @@ export function withoutElement<T>(array: ReadonlyArray<T>, index: number): T[] {
 /**
  * Create a new array that contains all the elements from the previous but with two elements swapped.
  * @param array Source array.
- * @param indexA Index to swap with 'indexB'
- * @param indexB Index to swap with 'indexA'
+ * @param indexA Treeview to swap with 'indexB'
+ * @param indexB Treeview to swap with 'indexA'
  * @returns New array with the swapped elements.
  */
 export function withSwappedElements<T>(array: ReadonlyArray<T>, indexA: number, indexB: number): T[] {

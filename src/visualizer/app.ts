@@ -11,18 +11,18 @@ import {SignalSingleton} from "./signalSingleton";
 
 let signalSingletonInst = SignalSingleton.getInstance();
 
-
-enum Mode {
+export enum Mode {
     Normal,
     Integration, // Import / export controls are hidden, expect to be controlled by extern code.
-}
-
-;
+};
 
 /** Function to run the main app logic in. */
-export async function run(searchParams: URLSearchParams): Promise<void> {
+export async function run(searchParams?: URLSearchParams, _mode?: Mode): Promise<void> {
 
-    mode = searchParams.get("mode") === "integration" ? Mode.Integration : Mode.Normal;
+    if(searchParams instanceof  URLSearchParams)
+        mode = searchParams.get("mode") === "integration" ? Mode.Integration : Mode.Normal;
+    else
+        mode = _mode;
 
     // Load persistent settings.
     const zoomspeed = Utils.Dom.tryGetFromStorage("zoomspeed");
@@ -33,15 +33,11 @@ export async function run(searchParams: URLSearchParams): Promise<void> {
     // Subscribe to navigation controls.
     window.onkeydown = onDomKeyPress;
     Utils.Dom.subscribeToClick("focus-button", focusTree);
-    Utils.Dom.subscribeToClick("blackboard-toggle", toggleBlackboard);
     Utils.Dom.subscribeToClick("zoomin-button", () => { Display.Tree.zoom(0.1); });
     Utils.Dom.subscribeToClick("zoomout-button", () => { Display.Tree.zoom(-0.1); });
     Utils.Dom.subscribeRangeInput("zoomspeed-slider", setZoomSpeed);
     Utils.Dom.subscribeToClick("undo-button", enqueueUndo);
     Utils.Dom.subscribeToClick("redo-button", enqueueRedo);
-
-    toggleToolbox()
-    toggleBlackboard()
 
     switch (mode) {
         case Mode.Normal:
@@ -76,9 +72,9 @@ export async function run(searchParams: URLSearchParams): Promise<void> {
         case Mode.Integration:
 
             // Hide control elements.
-            Utils.Dom.hideElementById("toolbox");
-            Utils.Dom.hideElementById("toolbox-toggle");
-            Utils.Dom.hideElementById("share-button");
+            // Utils.Dom.hideElementById("toolbox");
+            // Utils.Dom.hideElementById("toolbox-toggle");
+            // Utils.Dom.hideElementById("share-button");
 
             // Disable undo / redo until a tree has been loaded.
             Utils.Dom.setButtonDisabled("undo-button", true);
@@ -471,10 +467,10 @@ let currentTreeName = "unknown.tree.json";
 
 function setCurrentScheme(scheme: TreeScheme.IScheme): void {
     currentScheme = scheme;
-    Display.TreeScheme.setScheme(currentScheme);
 
     // Save the scheme in storage
     if (mode !== Mode.Integration) {
+        Display.TreeScheme.setScheme(currentScheme);
         Utils.Dom.trySaveToStorage("scheme", TreeScheme.Serializer.composeJson(scheme));
     }
 
@@ -612,8 +608,8 @@ function onDomKeyPress(event: KeyboardEvent): void {
     //     //     break;
     //     case "c": enqueueCopyTreeToClipboard(); break;
     //     case "v": enqueuePasteTree(); break;
-    //     case "+": case "=": Display.Tree.zoom(0.1); break;
-    //     case "-": case "_": Display.Tree.zoom(-0.1); break;
+    //     case "+": case "=": Display.Treeview.zoom(0.1); break;
+    //     case "-": case "_": Display.Treeview.zoom(-0.1); break;
     //     case "z":
     //         if (event.shiftKey) {
     //             enqueueRedo();

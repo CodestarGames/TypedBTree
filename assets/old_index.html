@@ -1,0 +1,312 @@
+﻿﻿﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- Content-Security-Policy -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+  <link rel="icon" href="../assets/favicon.ico" />
+  <link rel="preload" rel="../lib/external/jscolor/jscolor.js" as="script"></link>
+  <link rel="preload" rel="../lib/litegui.min.js" as="script"></link>
+  <link rel="preload" rel="preload" href="../dist/bundle.js" as="script">
+  <link rel="stylesheet" type="text/css" href="../lib/litegui.css">
+  <link rel="stylesheet" type="text/css" href="../assets/style.css">
+  <title>TypedTree</title>
+</head>
+
+<body>
+<!-- Svg tree content -->
+<div id="input-blocker" class="order-back"></div>
+
+
+<!-- Button to copy sharable link to clipboard -->
+<button type="button" class="control-element" id="share-button">Share 📋</button>
+
+<!-- Button to toggle the toolbox -->
+<button type="button" class="control-element" id="toolbox-toggle">Toolbox</button>
+
+<button type="button" class="control-element" id="blackboard-toggle">Blackboard</button>
+<button type="button" class="control-element" id="play-toggle" onclick="onPlayButtonPressed()">Play</button>
+<button type="button" class="control-element" id="reload-toggle" onclick="reloadVisualiser()">Reload</button>
+
+<!-- Button to focus the view -->
+<button type="button" class="control-element" id="focus-button">Focus</button>
+
+<!-- Zoom controls -->
+<div class="control-element" id="zoomcontrols-container">
+  Zoom
+  <button type="button" id="zoomout-button">Out (-)</button>
+  <button type="button" id="zoomin-button">In (+)</button>
+  <label for="zoomspeed">Speed</label>
+  <input type="range" id="zoomspeed-slider" name="zoomspeed" min="0" max="1" step="any">
+</div>
+
+<!-- Buttons for undo / redo -->
+<button type="button" class="control-element" id="undo-button">Undo</button>
+<button type="button" class="control-element" id="redo-button">Redo</button>
+
+<!-- Toolbox containing the main ways to interact with the app -->
+<div id="toolbox">
+  <div class="header">Scheme</div>
+  <div class="element" id="openscheme-container">
+    <input type="file" id="openscheme-file" accept=".json" />
+    <button type="button" id="exportscheme-button">Export</button>
+  </div>
+  <div id="scheme-display"></div>
+
+  <div class="header">Tree</div>
+  <div class="element" id="opentree-container">
+    <button type="button" id="newtree-button">New</button>
+    <input type="file" id="opentree-file" accept=".json" />
+    <button type="button" id="pastetree-button">Paste 📋</button>
+  </div>
+  <div class="element" id="exporttree-container">
+    <button type="button" id="exporttree-button">Export (e)</button>
+    <button type="button" id="copytree-button">Copy 📋</button>
+  </div>
+
+  <div class="header">Pack</div>
+  <div class="element" id="pack-container">
+    <input type="file" id="openpack-file" accept=".json" />
+    <button type="button" id="exportpack-button">Export</button>
+  </div>
+</div>
+
+<div id="blackboard">
+
+</div>
+
+
+<!-- Javascript -->
+<noscript>
+  <div class="error">JavaScript support is required.</div>
+</noscript>
+<script src="../lib/external/jscolor/jscolor.js"></script>
+<script src="../dist/bundle.js"></script>
+<script type="text/javascript">
+  let canvas = document.createElement("div");
+  canvas.id = "svg-display";
+  //canvas.innerHTML = toolbarHTML;
+  document.body.appendChild(canvas);
+  window.TypedBTree.TreeVis();
+  let behaviourTree;
+  /**
+   * The behaviour tree blackboard.
+   */
+  let blackboard;
+
+  window.enqueueLoadSchemeFromUrlOrFile("example.treescheme.json");
+
+  /**
+   * The play interval id.
+   * This will be set while playing a tree.
+   */
+  let playIntervalId = null;
+
+  // Set a test definition.
+  let definition = `{
+  "$type": "AI.Items.Root",
+  "children": {
+    "$type": "AI.Items.Sequence",
+    "children": [
+      {
+        "$type": "AI.Items.Actions.DelayTestAction",
+        "$data.duration": 1000
+      },
+      {
+        "$type": "AI.Items.Actions.DelayTestAction",
+        "$data.duration": 1000
+      },
+      {
+        "$type": "AI.Items.Actions.DelayTestAction",
+        "$data.duration": 1000
+      }
+    ]
+  },
+  "$data.treeName": "default tree"
+}`;
+
+  // Set a test blackboard in the blackboard text area.
+  let blackboardText = `{
+      "AI.Items.Actions.DelayTestAction": async() => TypedBTree.State.SUCCEEDED,
+      "AI.Items.Actions.Say": async(args) => {
+          alert(args['$data.text']);
+          return TypedBTree.State.SUCCEEDED
+      },
+      "AI.Items.Actions.Prompt": async(args) => {
+          var r = confirm(args['$data.text']);
+          return r ? TypedBTree.State.SUCCEEDED : TypedBTree.State.FAILED
+      },
+      "AI.Items.Actions.PlayNarration": async() => TypedBTree.State.FAILED,
+      "AI.Conditions.IsHungry": () => true
+    }`;
+
+  let editor = ace.edit("blackboard", {
+    theme: "ace/theme/twilight",
+    mode: "ace/mode/javascript",
+  });
+  editor.setOption("showPrintMargin", false);
+  editor.setValue(blackboardText);
+
+  function loadTree() {
+    // Create the blackboard.
+    const blackboard = (new Function("IsKeyPressed", `return (${editor.getValue()});`))((keyCode) => {
+      return window.allPressedKeyCodes[keyCode];
+    });
+
+    if(window.getCurrentTreeJson()){
+      definition = window.getCurrentTreeJson();
+    }
+
+    // Try to create the behaviour tree.
+    behaviourTree = new TypedBTree.BehaviourTree(definition, blackboard);
+    window.enqueueRuntimeTree(JSON.stringify(behaviourTree._rootNode), true);
+  }
+
+  /**
+   * Reload the visualiser.
+   */
+  function reloadVisualiser() {
+    // Stop any tree playback.
+    if (playIntervalId) {
+      clearInterval(playIntervalId);
+
+      // Clear the play interval id.
+      playIntervalId = null;
+    }
+
+    loadTree()
+
+    // Build the tree view.
+    buildTreeView();
+  };
+
+  /**
+   * Handles clicks on the 'play' button.
+   */
+  function onPlayButtonPressed() {
+    // If there is no behaviour tree then there is nothing to do here.
+    if (!behaviourTree) {
+      return;
+    }
+
+    //reset the tree
+    loadTree();
+
+    // Get an interval duration with which to step the tree.
+    let interval = prompt("Please enter a step interval in milliseconds", "100");
+
+    // Check to make sure that the user specified an integer value.
+    if (isNaN(interval)) {
+      alert("step interval must be an integer value");
+
+      return;
+    }
+
+    // Set running state.
+    setRunningState(true);
+
+    // Create an interval to step the tree until it is finished.
+    playIntervalId = setInterval(() => {
+      // Step the behaviour tree, if anything goes wrong we will stop the tree playback.
+      try {
+        behaviourTree.step();
+      } catch (exception) {
+        // Notify the user of the exception.
+        alert(exception);
+
+        // Reload the visualiser.
+        reloadVisualiser();
+      }
+
+      // Rebuild the tree view.
+      buildTreeView();
+
+      // If the tree root is in a finished state then stop the interval.
+      if (!behaviourTree.isRunning()) {
+        clearInterval(playIntervalId);
+
+        // Clear the play interval id.
+        playIntervalId = null;
+      }
+    }, parseInt(interval, 10));
+  };
+
+  /**
+   * Build the tree view.
+   */
+  function buildTreeView() {
+    window.enqueueRuntimeTree(JSON.stringify(behaviourTree._rootNode), false)
+  };
+
+
+  // Keep track of all key press states for use within the blackboard.
+  window.allPressedKeyCodes = {};
+  window.onkeyup = function (event) {
+    this.allPressedKeyCodes[event.keyCode] = false;
+  }
+  window.onkeydown = function (event) {
+    this.allPressedKeyCodes[event.keyCode] = true;
+  }
+
+  /**
+   * Set the running state of the editor.
+   */
+  function setRunningState(isRunning) {
+    if (isRunning) {
+
+    } else {
+
+    }
+
+  };
+
+  // Do the initial visualiser reload.
+  reloadVisualiser();
+
+
+</script>
+</body>
+
+</html>
+
+<!-- Definition for svg icons -->
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+
+    <circle id="nodeConnector" cx="0" cy="0" r="7" />
+
+    <g id="arrayAdd">
+      <rect x="-6" y="-6" width="12" height="12" stroke-width="1" stroke="#000" />
+      <path d="M 0 3.5 L 0 -3.5 M 3.5 0 L -3.5 0 z" fill="none" stroke="#000" stroke-width="2" />
+    </g>
+
+    <g id="arrayDelete">
+      <rect x="-6" y="-6" width="12" height="12" stroke-width="1" stroke="#000" />
+      <path d="M -3.5 3.5 L 3.5 -3.5 M 3.5 3.5 L -3.5 -3.5 z" fill="none" stroke="#000" stroke-width="2" />
+    </g>
+
+    <g id="arrayDuplicate">
+      <rect x="-6" y="-6" width="12" height="12" stroke-width="1" stroke="#000" />
+      <path d="M -2 -3.5 L -2 3.5 C 4 3.5 4 -3.5 -2 -3.5 z" fill="none" stroke="#000" stroke-width="2" />
+    </g>
+
+    <g id="arrayOrderUp">
+      <rect x="-4" y="-4" width="8" height="8" stroke-width="1" stroke="#000" />
+      <path d="M -2.5 2.5 L 0 -2.5 L 2.5 2.5 z" fill="#000" stroke="none" />
+    </g>
+
+    <g id="arrayOrderDown">
+      <rect x="-4" y="-4" width="8" height="8" stroke-width="1" stroke="#000" />
+      <path d="M -2.5 -2.5 L 0 2.5 L 2.5 -2.5 z" fill="#000" stroke="none" />
+    </g>
+
+    <g id="info">
+      <circle cx="0" cy="0" r="7" fill="#DDD" stroke="#000" />
+      <circle cx="0" cy="-3.5" r="1.5" fill="#000" />
+      <path d="M 0 4.5 L 0 -1 z" fill="none" stroke="#000" stroke-width="2" />
+    </g>
+
+  </defs>
+</svg>

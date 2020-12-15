@@ -14,7 +14,7 @@ export interface ITreePack {
 /**
  * Construct a pack, combining a scheme and a tree.
  * @param scheme Scheme to add to the pack.
- * @param tree Tree to add to the pack.
+ * @param tree Treeview to add to the pack.
  * @returns Newly constructed (immutable) node
  */
 export function createPack(scheme: TreeScheme.IScheme, tree: Tree.INode): ITreePack {

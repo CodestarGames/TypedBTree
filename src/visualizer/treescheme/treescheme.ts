@@ -28,7 +28,7 @@ interface ITreeTypeMap {
 }
 
 /**
- * Tree scheme.
+ * Treeview scheme.
  * Consists out of aliases, enums and nodes.
  * Aliases: Named group of nodes. (For example 'Condition' alias can contain all condition like nodes)
  * Enums: Named set of numbers. (Same as in many programming languages)

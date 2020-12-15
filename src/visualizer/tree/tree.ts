@@ -3,7 +3,7 @@
  */
 
 import * as Utils from "../utils";
-import {createNodeUid} from "../../nodes/node";
+import {createNodeUid} from "../../runtime/nodes/node";
 
 /** Identifier for the node-type */
 export type NodeType = string;

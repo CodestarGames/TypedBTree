@@ -109,7 +109,18 @@ export default abstract class Node {
   }
 
   getState() {
-    return this.state;
+
+      switch (this.state.toString()) {
+        case 'Symbol(typedBTree.running)':
+          return State.RUNNING;
+        case 'Symbol(typedBTree.succeeded)':
+          return State.SUCCEEDED;
+        case 'Symbol(typedBTree.failed)':
+          return State.FAILED;
+        default:
+          return State.RUNNING;
+      }
+
   }
 
   getStateAsString() {
@@ -158,7 +169,16 @@ export default abstract class Node {
   }
 
   setState(value) {
-    return this.state = value;
+      switch (value.toString()) {
+        case 'Symbol(typedBTree.running)':
+          return this.state = State.RUNNING;
+        case 'Symbol(typedBTree.succeeded)':
+          return this.state = State.SUCCEEDED;
+        case 'Symbol(typedBTree.failed)':
+          return this.state = State.FAILED;
+        default:
+          return this.state = State.RUNNING;
+      }
   }
 
   reset() {

@@ -51,7 +51,7 @@ behaviourTree.step();
 // 'laughing!'
 ```
 
-# Behaviour Tree Methods
+# Behaviour Treeview Methods
 
 #### .isRunning()
 Returns `true` if the tree is in the `RUNNING` state, otherwise `false`.

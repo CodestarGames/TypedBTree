@@ -12,6 +12,9 @@ import {RootNodesBuilder} from "./rootNodesBuilder";
  * @param board The board.
  */
 export default class BehaviourTree {
+    get rootNode(): Root {
+        return this._rootNode;
+    }
 
     private readonly _blackboard: unknown;
     private _rootNode: Root;

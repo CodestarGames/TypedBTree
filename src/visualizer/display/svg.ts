@@ -106,9 +106,9 @@ export interface IElement {
 
 /** Initialize the display, needs to be done once. */
 export function initialize(): void {
-    if (svgRoot != null) {
-        throw new Error("Already initialized");
-    }
+    // if (svgRoot != null) {
+    //     throw new Error("Already initialized");
+    // }
 
     const displayRoot = document.getElementById(displayRootElementId);
     if (displayRoot === null) {

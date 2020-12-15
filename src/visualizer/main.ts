@@ -27,8 +27,8 @@ export default function () {
 
 
         // Initialize dom elements.
-        Display.Svg.initialize();
-        Display.TreeScheme.initialize();
+        //Display.Svg.initialize();
+        //Display.TreeScheme.initialize();
 
         // Export functions to window for interop.
         (window as any).getCurrentSchemeJson = App.getCurrentSchemeJson;
@@ -56,7 +56,7 @@ export default function () {
         const searchParams = url.searchParams;
         //history.replaceState("", "", url.origin + url.pathname.replace("index.html", ""));
 
-        Display.Blackboard.initialize();
+        //Display.Blackboard.initialize();
 
         // Starting running the app.
         App.run(searchParams);

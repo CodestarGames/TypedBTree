@@ -1,0 +1,366 @@
+{
+  "rootAlias": "AI.Root",
+  "aliases": [
+    {
+      "identifier": "AI.Root",
+      "values": [
+        "AI.Items.Root"
+      ]
+    },
+    {
+      "identifier": "AI.Item",
+      "values": [
+        "AI.Items.Selector",
+        "AI.Items.Sequence",
+        "AI.Items.Parallel",
+        "AI.Items.Wait",
+        "AI.Items.Flip",
+        "AI.Items.Lotto",
+        "AI.Items.Condition",
+        "AI.Items.Repeat",
+        "AI.Items.Actions.PlayNarration",
+        "AI.Items.Actions.Say",
+        "AI.Items.Actions.Prompt",
+        "AI.Items.Actions.DelayTestAction"
+      ]
+    },
+    {
+      "identifier": "AI.Action",
+      "values": [
+        "AI.Items.Actions.PlayNarration",
+        "AI.Items.Actions.Say",
+        "AI.Items.Actions.Prompt",
+        "AI.Items.Actions.DelayTestAction"
+      ]
+    },
+    {
+      "identifier": "AI.Hook",
+      "values": [
+        "AI.Hooks.Entry",
+        "AI.Hooks.Exit",
+        "AI.Hooks.Step",
+        "AI.Hooks.While",
+        "AI.Hooks.Until"
+      ]
+    },
+    {
+      "identifier": "AI.Condition",
+      "values": [
+        "AI.Conditions.IsHungry"
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "identifier": "AI.Assets.Audio",
+      "values": [
+        {
+          "value": 0,
+          "name": "Hello.mp3"
+        },
+        {
+          "value": 1,
+          "name": "Goodbye.mp3"
+        }
+      ]
+    },
+    {
+      "identifier": "AI.Characters.Portrait",
+      "values": [
+        {
+          "value": 0,
+          "name": "Sonata"
+        },
+        {
+          "value": 1,
+          "name": "Arthur"
+        },
+        {
+          "value": 2,
+          "name": "Enemy1"
+        }
+      ]
+    },
+    {
+      "identifier": "AI.Assets.Images",
+      "values": [
+        {
+          "value": 0,
+          "name": "background.png"
+        },
+        {
+          "value": 1,
+          "name": "test.png"
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "nodeType": "AI.Items.Root",
+      "comment": "Invoke the tree",
+      "fields": [
+        {
+          "name": "children",
+          "valueType": "AI.Item",
+          "isArray": false
+        },
+        {
+          "name": "$data.treeName",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Selector",
+      "comment": "Invoke the first child that succeeds",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "children",
+          "valueType": "AI.Item",
+          "isArray": true
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Repeat",
+      "comment": "Invoke X number of times",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.times",
+          "valueType": "number"
+        },
+        {
+          "name": "children",
+          "valueType": "AI.Item",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Sequence",
+      "comment": "Invoke all children in sequence (the first one that fails stops the chain)",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "children",
+          "valueType": "AI.Item",
+          "isArray": true
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Condition",
+      "comment": "Return SUCCESS if condition passes",
+      "fields": [
+        {
+          "name": "condition",
+          "valueType": "AI.Condition",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Parallel",
+      "comment": "",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "children",
+          "valueType": "AI.Item",
+          "isArray": true
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Wait",
+      "comment": "",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.duration",
+          "valueType": "number"
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Flip",
+      "comment": "",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "children",
+          "valueType": "AI.Item",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Lotto",
+      "comment": "",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.tickets",
+          "valueType": "string"
+        },
+        {
+          "name": "children",
+          "valueType": "AI.Item",
+          "isArray": true
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Actions.PlayNarration",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.audio",
+          "valueType": "AI.Assets.Audio",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Actions.Say",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.portraits",
+          "valueType": "AI.Characters.Portrait",
+          "isArray": true
+        },
+        {
+          "name": "$data.text",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Actions.Prompt",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.portraits",
+          "valueType": "AI.Characters.Portrait",
+          "isArray": true
+        },
+        {
+          "name": "$data.text",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Items.Actions.DelayTestAction",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "AI.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.duration",
+          "valueType": "number"
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Hooks.Entry",
+      "fields": [
+        {
+          "name": "action",
+          "valueType": "AI.Action",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Hooks.Step",
+      "fields": [
+        {
+          "name": "action",
+          "valueType": "AI.Action",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Hooks.Exit",
+      "fields": [
+        {
+          "name": "action",
+          "valueType": "AI.Action",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Hooks.While",
+      "fields": [
+        {
+          "name": "condition",
+          "valueType": "AI.Condition",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Hooks.Until",
+      "fields": [
+        {
+          "name": "condition",
+          "valueType": "AI.Condition",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "AI.Conditions.IsHungry",
+      "fields": []
+    }
+  ]
+}

@@ -7,4 +7,3 @@ export const State = {
     SUCCEEDED: Symbol("typedBTree.succeeded"),
     FAILED: Symbol("typedBTree.failed")
 };
-

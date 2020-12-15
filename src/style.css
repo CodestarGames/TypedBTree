@@ -1,5 +1,5 @@
-@import url("nodestyle.css");
-@import url("toolboxstyle.css");
+@import url("./nodestyle.css");
+@import url("./toolboxstyle.css");
 
 html, html > body {
     width: 100%;
@@ -218,6 +218,7 @@ body > .dragging-layer > div:last-child {
     white-space: nowrap;
     outline: none;
     zoom: 1;
+    background: #2f2f2f;
 }
 .dock-ink-bar {
     position: absolute;
@@ -494,7 +495,7 @@ body.dock-dragging iframe {
 .dock-panel {
     box-sizing: border-box;
     position: relative;
-    background: #fff;
+    background: #5d5d68;
     border: 1px solid #ddd;
 }
 .dock-panel.dragging {

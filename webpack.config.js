@@ -1,9 +1,9 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 module.exports = {
   mode: 'development',
-  devtool: "source-map",
+
   entry: {
     app: path.join(__dirname, 'src', 'index.tsx')
   },
@@ -13,8 +13,7 @@ module.exports = {
     library: 'TypedBTree',
     libraryTarget: 'umd',
     globalObject: 'this',
-    umdNamedDefine: true,
-
+    umdNamedDefine: true
   },
   resolve: {
     extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
@@ -33,16 +32,30 @@ module.exports = {
         loader: "awesome-typescript-loader",
         exclude: /node_modules/
       },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|jpg)$/,
+        loader: 'url-loader'
+      }
     ]
   },
   devServer: {
     port: 4000,
+    https:true,
     open: true,
     hot: true
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src', 'index.html')
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/assets', to: 'assets' }
+      ]
     })
   ]
 }
