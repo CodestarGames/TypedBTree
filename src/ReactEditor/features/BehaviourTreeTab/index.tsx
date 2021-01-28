@@ -38,6 +38,8 @@ export class BehaviourTreeTab extends Component {
         if (node.$type.indexOf('AI.Items.Lotto') > -1)
             backgroundClass += 'tree-view-icon-lotto';
 
+        if (node.$type.indexOf('AI.Items.Switch') > -1)
+            backgroundClass += 'tree-view-icon-switch';
         if (node.$type.indexOf('AI.Items.Flip') > -1)
             backgroundClass += 'tree-view-icon-flip';
         return backgroundClass;

@@ -42,6 +42,10 @@
     fill: rgb(207, 144, 7) !important;
 }
 
+#svg-display .tree-view-icon-switch {
+    fill: rgb(172, 171, 207) !important;
+}
+
 #svg-display .tree-view-icon-lotto {
     fill: rgb(12, 185, 133) !important;
 }
@@ -156,6 +160,7 @@
 #svg-display .string-value {
     /*background-color: #DDD;*/
     width: 90%;
+    height: 100%;
 }
 
 #svg-display .number-value {

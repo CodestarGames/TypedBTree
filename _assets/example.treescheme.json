@@ -18,17 +18,13 @@
         "$$.Lotto",
         "$$.Condition",
         "$$.Repeat",
-        "$$.Actions.Execute",
-        "$$.Actions.SetBlkBrdVar",
-        "$$.Actions.PlaySpineAnimationCmd"
+        "$$.Actions.Execute"
       ]
     },
     {
       "identifier": "$$.Action",
       "values": [
-        "$$.Actions.Execute",
-        "$$.Actions.SetBlkBrdVar",
-        "$$.Actions.PlaySpineAnimationCmd"
+        "$$.Actions.Execute"
       ]
     },
     {
@@ -54,53 +50,7 @@
       ]
     }
   ],
-  "enums": [
-    {
-      "identifier": "$$.Cmd",
-      "values": [
-        {
-          "value": 0,
-          "name": "none"
-        },
-        {
-          "value": 1,
-          "name": "animateSpine"
-        },
-        {
-          "value": 2,
-          "name": "doPrompt"
-        },
-        {
-          "value": 3,
-          "name": "promptShown"
-        },
-        {
-          "value": 4,
-          "name": "correctShown"
-        },
-        {
-          "value": 5,
-          "name": "allCorrectShown"
-        },
-        {
-          "value": 6,
-          "name": "setAttribute"
-        },{
-          "value": 7,
-          "name": "reenableIdle"
-        },{
-          "value": 8,
-          "name": "disableIdleTimer"
-        },{
-          "value": 9,
-          "name": "enableIdleTimer"
-        },{
-          "value": 10,
-          "name": "tweenAttributes"
-        }
-      ]
-    }
-  ],
+  "enums": [],
   "nodes": [
     {
       "nodeType": "$$.Root",
@@ -256,63 +206,8 @@
           "isArray":true
         },
         {
-          "name": "$data.cmd",
-          "valueType": "string",
-          "isArray": false
-        },
-        {
-          "name": "$data.gameObject",
-          "valueType": "string",
-          "isArray": false
-        },
-        {
           "name": "$data.data",
-          "valueType": "json",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Actions.PlaySpineAnimationCmd",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray":true
-        },
-        {
-          "name": "$data.gameObject",
           "valueType": "string",
-          "isArray": false
-        },
-        {
-          "name": "$data.animConfig",
-          "valueType": "json",
-          "isArray": false
-        },
-        {
-          "name": "$data.sndConfig",
-          "valueType": "json",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Actions.SetBlkBrdVar",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray":true
-        },
-        {
-          "name": "$data.variableName",
-          "valueType": "string",
-          "isArray": false
-        },
-        {
-          "name": "$data.data",
-          "valueType": "json",
           "isArray": false
         }
       ]
@@ -377,9 +272,6 @@
     },
     {
       "nodeType": "$$.Conds.Evnts.promptAnimVoCircle",
-      "fields": []
-    },{
-      "nodeType": "$$.Conds.Evnts.promptAnimVoSquare",
       "fields": []
     },
     {

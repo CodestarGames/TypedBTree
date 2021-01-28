@@ -1,8 +1,6 @@
 import {observable, action, computed, reaction, makeObservable, makeAutoObservable, autorun} from "mobx"
 import {createContext} from "react"
-import BehaviourTree from "../../runtime/behaviourtree";
-import * as graphVisualizer from "../../visualizer/app";
-
+import { BehaviourTree } from 'TypedBTreeRuntime/src';
 
 class AppStore {
 
@@ -56,7 +54,7 @@ class AppStore {
 
     @observable interval: string = '';
 
-    behaviourTree: BehaviourTree = null;
+    behaviourTree: any = null;
 
     @observable definition: string = '';
 

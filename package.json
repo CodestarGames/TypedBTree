@@ -59,6 +59,7 @@
   "dependencies": {
     "@playcanvas/pcui": "^1.0.8",
     "@types/react": "^17.0.0",
+    "TypedBTreeRuntime": "github:codestargames/TypedBTreeRuntime",
     "ace-builds": "^1.4.12",
     "classnames": "^2.2.6",
     "file-saver": "^2.0.2",

@@ -19,6 +19,7 @@ export function fieldWithElement<T extends Tree.Field>(
 
     switch (field.kind) {
         case "stringArray":
+        case "jsonArray":
         case "numberArray":
         case "booleanArray":
         case "nodeArray":
@@ -105,9 +106,11 @@ export function cloneNode(node: Tree.INode): Tree.INode {
 function cloneField(field: Tree.Field): Tree.Field {
     switch (field.kind) {
         case "string":
+        case "json":
         case "number":
         case "boolean":
         case "stringArray":
+        case "jsonArray":
         case "numberArray":
         case "booleanArray":
             return field;

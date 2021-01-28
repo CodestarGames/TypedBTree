@@ -86,6 +86,7 @@ export function validateField(
     // Validate value
     switch (fieldDefinition.valueType) {
         case "string": return true;
+        case "json": return true;
         case "number": return true;
         case "boolean": return true;
         default:
@@ -135,6 +136,7 @@ function createInvalidFieldFailure(nodeDefinition: TreeScheme.INodeDefinition, g
 }
 
 function createInvalidFieldTypeFailure(expectedKind: Tree.FieldKind, field: Tree.Field): IFailure {
+    debugger
     return createFailure(`Field '${field.name}' has unexpected type: '${field.kind}', expected: '${expectedKind}'`);
 }
 

@@ -73,7 +73,7 @@
 }
 
 .b-t-tab-treeview .m-node {
-    list-style-image: url('../../../../assets/tree_lines_16x16.png');
+    list-style-image: url('../../../../_assets/tree_lines_16x16.png');
     display: list-item;
 }
 

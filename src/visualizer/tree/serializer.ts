@@ -39,11 +39,13 @@ export function createObject(node: Tree.INode): object {
             case "string":
             case "number":
             case "boolean":
+            case "json":
                 obj[field.name] = field.value;
                 break;
             case "stringArray":
             case "numberArray":
             case "booleanArray":
+            case "jsonArray":
                 if (field.value.length > 0) {
                     obj[field.name] = field.value;
                 }

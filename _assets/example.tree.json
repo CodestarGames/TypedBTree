@@ -1,0 +1,8 @@
+{
+  "$type": "AI.Items.Root",
+  "children": {
+    "$type": "AI.Items.Selector",
+    "children": []
+  },
+  "$data.treeName": ""
+}

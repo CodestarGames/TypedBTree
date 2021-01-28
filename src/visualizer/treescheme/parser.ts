@@ -179,6 +179,7 @@ function parseValueType(schemeBuilder: TreeScheme.ISchemeBuilder, obj: any): Tre
     }
     switch (str) {
         case "string":
+        case "json":
         case "number":
         case "boolean":
             return str;

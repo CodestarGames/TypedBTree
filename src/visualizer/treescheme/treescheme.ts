@@ -6,7 +6,7 @@ import * as Tree from "../tree";
 import * as Utils from "../utils";
 
 /** Possible types a field can have */
-export type FieldValueType = "string" | "number" | "boolean" | IAlias | IEnum;
+export type FieldValueType = "string" | "number" | "boolean" | "json" | IAlias | IEnum;
 
 /** Extract an identifier out of a FieldValueType */
 export type FieldValueTypeIdentifier<T extends FieldValueType> =
@@ -21,6 +21,7 @@ export type TreeType<T extends FieldValueType> = ITreeTypeMap[FieldValueTypeIden
 /** Mapping from scheme FieldValueType to types on the tree */
 interface ITreeTypeMap {
     "string": string;
+    "json": object;
     "number": number;
     "boolean": boolean;
     "alias": Tree.INode;
@@ -142,6 +143,7 @@ export function getDefaultDefinition(scheme: IScheme, alias: IAlias): INodeDefin
 export function getPrettyFieldValueType(valueType: FieldValueType, isArray: boolean = false): string {
     switch (valueType) {
         case "string":
+        case "json":
         case "number":
         case "boolean":
             return `${valueType}${isArray ? "[]" : ""}`;
@@ -158,6 +160,7 @@ export function getPrettyFieldValueType(valueType: FieldValueType, isArray: bool
 export function validateAliasType(fieldValueType: FieldValueType): IAlias | undefined {
     switch (fieldValueType) {
         case "string":
+        case "json":
         case "number":
         case "boolean":
             return undefined;
@@ -177,6 +180,7 @@ export function validateAliasType(fieldValueType: FieldValueType): IAlias | unde
 export function validateEnumType(fieldValueType: FieldValueType): IEnum | undefined {
     switch (fieldValueType) {
         case "string":
+        case "json":
         case "number":
         case "boolean":
             return undefined;
@@ -196,6 +200,7 @@ export function validateEnumType(fieldValueType: FieldValueType): IEnum | undefi
 export function getFieldKind(field: IFieldDefinition): Tree.FieldKind {
     switch (field.valueType) {
         case "string": return field.isArray ? "stringArray" : "string";
+        case "json": return field.isArray ? "jsonArray" : "json";
         case "number": return field.isArray ? "numberArray" : "number";
         case "boolean": return field.isArray ? "booleanArray" : "boolean";
         default:

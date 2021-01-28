@@ -372,6 +372,7 @@ class GroupElement implements IElement {
         callback: (newValue: string) => void): void {
 
         const inputElement = Utils.Dom.createTextInput(value, callback);
+        inputElement.title = (value);
         inputElement.className = className;
         this.addForeignObject(position, size, inputElement);
     }

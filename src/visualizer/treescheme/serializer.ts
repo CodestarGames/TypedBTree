@@ -66,6 +66,7 @@ function createFieldObject(field: TreeScheme.IFieldDefinition): object {
 function createValueTypeString(valueType: TreeScheme.FieldValueType): string {
     switch (valueType) {
         case "string":
+        case "json":
         case "boolean":
         case "number":
             return valueType;

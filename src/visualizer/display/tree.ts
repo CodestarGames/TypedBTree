@@ -7,6 +7,7 @@ import * as TreeScheme from "../treescheme";
 import * as Utils from "../utils";
 import { Vector } from "../utils";
 import * as Svg from "./svg";
+import {FieldValueType} from "../treescheme/treescheme";
 
 /** Callback for when a tree is changed, returns a new immutable tree. */
 export type treeChangedCallback = (newTree: Tree.INode) => void;
@@ -87,31 +88,31 @@ function createNode(
             backgroundClass += ' ' + node.state;
         }
         else {
-            if (definition.nodeType.indexOf('AI.Items.Actions') > -1)
+            if (definition.nodeType.indexOf('$$.Actions') > -1)
                 backgroundClass += ' tree-view-icon-action';
 
-            if (definition.nodeType.indexOf('AI.Items.Repeat') > -1)
+            if (definition.nodeType.indexOf('$$.Repeat') > -1)
                 backgroundClass += ' tree-view-icon-repeat';
 
-            if (definition.nodeType.indexOf('AI.Items.Sequence') > -1)
+            if (definition.nodeType.indexOf('$$.Sequence') > -1)
                 backgroundClass += ' tree-view-icon-sequence';
 
-            if (definition.nodeType.indexOf('AI.Items.Selector') > -1)
+            if (definition.nodeType.indexOf('$$.Selector') > -1)
                 backgroundClass += ' tree-view-icon-selector';
 
-            if (definition.nodeType.indexOf('AI.Items.Wait') > -1)
+            if (definition.nodeType.indexOf('$$.Wait') > -1)
                 backgroundClass += ' tree-view-icon-wait';
 
-            if (definition.nodeType.indexOf('AI.Items.Condition') > -1)
+            if (definition.nodeType.indexOf('$$.Condition') > -1)
                 backgroundClass += ' tree-view-icon-condition';
 
-            if (definition.nodeType.indexOf('AI.Items.Parallel') > -1)
+            if (definition.nodeType.indexOf('$$.Parallel') > -1)
                 backgroundClass += ' tree-view-icon-parallel';
 
-            if (definition.nodeType.indexOf('AI.Items.Lotto') > -1)
+            if (definition.nodeType.indexOf('$$.Lotto') > -1)
                 backgroundClass += ' tree-view-icon-lotto';
 
-            if (definition.nodeType.indexOf('AI.Items.Flip') > -1)
+            if (definition.nodeType.indexOf('$$.Flip') > -1)
                 backgroundClass += ' tree-view-icon-flip';
         }
     }
@@ -184,6 +185,7 @@ function createField(
     // Value
     switch (field.kind) {
         case "stringArray":
+        case "jsonArray":
         case "numberArray":
         case "booleanArray":
         case "nodeArray":
@@ -201,7 +203,7 @@ function createField(
 
         createElementValue(field.value, 0, 0, newElement => {
             changed(Tree.Modifications.fieldWithValue(field, newElement as Tree.FieldValueType<T>));
-        });
+        }, field.kind === 'json');
     }
 
     function createArrayFieldValue<T extends Tree.ArrayField>(
@@ -270,10 +272,16 @@ function createField(
         element: T,
         xOffset: number,
         yOffset: number,
-        changed: elementChangedCallback<T>): void {
+        changed: elementChangedCallback<T>,
+        isJson?: boolean
+    ): void {
 
-        const pos: Vector.Position = { x: nameWidth + xOffset, y: centeredYOffset + yOffset };
+        const pos: Vector.Position = { x: nameWidth + xOffset, y: centeredYOffset + yOffset } //+ (Tree.PositionLookup.getFieldHeight(field) / 2) - 16};
         const size: Vector.Size = { x: fieldSize.x - pos.x, y: nodeFieldHeight };
+        if(isJson){
+            createStringValue(JSON.stringify(element, null, 2), pos, size, changed as elementChangedCallback<string>);
+            return;
+        }
         switch (typeof element) {
             case "string": createStringValue(element, pos, size, changed as elementChangedCallback<string>); break;
             case "number": createNumberValue(element, pos, size, changed as elementChangedCallback<number>); break;

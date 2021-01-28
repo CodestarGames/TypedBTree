@@ -13,7 +13,7 @@ import * as Tree from "./tree";
 export const nodeHeaderHeight = 50;
 
 /** Width of a node. */
-export const nodeWidth = 240;
+export const nodeWidth = 320;
 
 /** Horizontal spaces between nodes. */
 export const nodeHorizontalSpacing = 100;
@@ -89,11 +89,14 @@ export function getNodeHeight(node: Tree.INode): number {
 export function getFieldHeight(field: Tree.Field): number {
     switch (field.kind) {
         case "string":
+        case "json":
+            return nodeFieldHeight //* JSON.stringify(field.value, null, 2).split(/\r\n|\r|\n/).length - 4;
         case "number":
         case "boolean":
         case "node":
             return nodeFieldHeight;
         case "stringArray":
+        case "jsonArray":
         case "numberArray":
         case "booleanArray":
         case "nodeArray":

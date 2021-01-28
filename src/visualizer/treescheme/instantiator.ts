@@ -136,6 +136,10 @@ export function instantiateDefaultField(fieldDefinition: TreeScheme.IFieldDefini
             return fieldDefinition.isArray ?
                 { kind: "stringArray", name: fieldDefinition.name, value: [] } :
                 { kind: "string", name: fieldDefinition.name, value: "" };
+        case "json":
+            return fieldDefinition.isArray ?
+                { kind: "jsonArray", name: fieldDefinition.name, value: [] } :
+                { kind: "json", name: fieldDefinition.name, value: "" };
         case "number":
             return fieldDefinition.isArray ?
                 { kind: "numberArray", name: fieldDefinition.name, value: [] } :
@@ -173,6 +177,7 @@ export function createNewElement<T extends TreeScheme.FieldValueType>(valueType:
     const typedValueType = valueType as TreeScheme.FieldValueType;
     switch (typedValueType) {
         case "string": return "" as TreeScheme.TreeType<T>;
+        case "json": return {} as TreeScheme.TreeType<T>;
         case "number": return 0 as TreeScheme.TreeType<T>;
         case "boolean": return false as TreeScheme.TreeType<T>;
         default:

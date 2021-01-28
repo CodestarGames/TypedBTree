@@ -105,12 +105,16 @@ function parseField(name: string, value: any): Tree.Field | undefined {
                     case "number": return { kind: "numberArray", name, value: array };
                     case "boolean": return { kind: "booleanArray", name, value: array };
                     case "object": {
+                        if(name === '$data.data' || name.toLowerCase().indexOf('config') > -1)
+                            return { kind: "jsonArray", name, value: array };
                         const nodeArray: Tree.INode[] = array.map(n => parseNode(n));
                         return { kind: "nodeArray", name, value: nodeArray };
                     }
                     default: throw new Error(`Unexpected array element type: ${arrayType}`);
                 }
             } else {
+                if(name === '$data.data' || name.toLowerCase().indexOf('config') > -1)
+                    return { kind: "json", name, value };
                 return { kind: "node", name, value: parseNode(value) };
             }
         }

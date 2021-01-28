@@ -3,7 +3,12 @@
  */
 
 import * as Utils from "../utils";
-import {createNodeUid} from "../../runtime/nodes/node";
+export function createNodeUid() {
+    var S4 = function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    };
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
 
 /** Identifier for the node-type */
 export type NodeType = string;
@@ -56,10 +61,12 @@ export type FieldKind = FieldValueKind<Field>;
 /** Union type of all possible fields. */
 export type Field =
     IStringField |
+    IJsonField |
     INumberField |
     IBooleanField |
     INodeField |
     IStringArrayField |
+    IJsonArrayField |
     INumberArrayField |
     IBooleanArrayField |
     INodeArrayField;
@@ -78,6 +85,12 @@ export interface INode {
 
 export interface IStringField {
     readonly kind: "string";
+    readonly name: string;
+    readonly value: string;
+}
+
+export interface IJsonField {
+    readonly kind: "json";
     readonly name: string;
     readonly value: string;
 }
@@ -102,6 +115,12 @@ export interface INodeField {
 
 export interface IStringArrayField {
     readonly kind: "stringArray";
+    readonly name: string;
+    readonly value: ReadonlyArray<string>;
+}
+
+export interface IJsonArrayField {
+    readonly kind: "jsonArray";
     readonly name: string;
     readonly value: ReadonlyArray<string>;
 }
@@ -278,6 +297,7 @@ export function printNode(node: INode, indent: number = 0, printLine: (line: str
     node.fields.forEach(field => {
         switch (field.kind) {
             case "string": printLine(`-${field.name}: ${field.value}`, indent); break;
+            case "json": printLine(`-${field.name}: ${field.value}`, indent); break;
             case "number": printLine(`-${field.name}: ${field.value}`, indent); break;
             case "boolean": printLine(`-${field.name}: ${field.value}`, indent); break;
             case "node":
@@ -285,6 +305,10 @@ export function printNode(node: INode, indent: number = 0, printLine: (line: str
                 printNode(field.value, indent + 1, printLine);
                 break;
             case "stringArray":
+                printLine(`-${field.name}:`, indent);
+                field.value.forEach(element => { printLine(element, indent + 1); });
+                break;
+            case "jsonArray":
                 printLine(`-${field.name}:`, indent);
                 field.value.forEach(element => { printLine(element, indent + 1); });
                 break;

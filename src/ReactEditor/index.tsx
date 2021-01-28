@@ -6,7 +6,6 @@ import {Directory} from "./features/Directory";
 import {BehaviourTreeTab} from "./features/BehaviourTreeTab";
 import {BlackboardTab} from "./features/BlackboardTab";
 import {DebuggerTab} from "./features/DebuggerTab";
-import BehaviourTree from "../runtime/behaviourtree";
 import * as graphVisualizer from '../visualizer/app'
 import AppStore from "./stores/AppStore";
 import {observer} from "mobx-react";
