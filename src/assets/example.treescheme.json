@@ -20,7 +20,9 @@
         "$$.Repeat",
         "$$.Actions.Execute",
         "$$.Actions.SetBlkBrdVar",
-        "$$.Actions.PlaySpineAnimationCmd"
+        "$$.Actions.PlaySpineAnimationCmd",
+        "$$.Actions.SetInteractive",
+        "$$.Actions.PlaySoundCmd"
       ]
     },
     {
@@ -28,7 +30,9 @@
       "values": [
         "$$.Actions.Execute",
         "$$.Actions.SetBlkBrdVar",
-        "$$.Actions.PlaySpineAnimationCmd"
+        "$$.Actions.PlaySpineAnimationCmd",
+        "$$.Actions.SetInteractive",
+        "$$.Actions.PlaySoundCmd"
       ]
     },
     {
@@ -46,11 +50,9 @@
       "values": [
         "$$.Conds.isIntroFinished",
         "$$.Conds.isWinConditionMet",
-        "$$.Conds.Evnts.promptAnimVoCircle",
-        "$$.Conds.Evnts.promptAnimVoSquare",
-        "$$.Conds.Evnts.inactiveCircle",
-        "$$.Conds.Evnts.inactiveSquare",
-        "$$.Conds.Evnts.incorrect"
+        "$$.Conds.isIncorrectTypeSelected",
+        "$$.Conds.isCorrectTypeSelected",
+        "$$.Conds.introNotStarted"
       ]
     }
   ],
@@ -298,6 +300,41 @@
       ]
     },
     {
+      "nodeType": "$$.Actions.PlaySoundCmd",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "$$.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.waitForFinish",
+          "valueType": "boolean",
+          "isArray": false
+        },
+        {
+          "name": "$data.sndConfig",
+          "valueType": "json",
+          "isArray": false
+        }
+      ]
+    },
+    {
+      "nodeType": "$$.Actions.SetInteractive",
+      "fields": [
+        {
+          "name": "hooks",
+          "valueType": "$$.Hook",
+          "isArray":true
+        },
+        {
+          "name": "$data.data",
+          "valueType": "json",
+          "isArray": false
+        }
+      ]
+    },
+    {
       "nodeType": "$$.Actions.SetBlkBrdVar",
       "fields": [
         {
@@ -376,22 +413,15 @@
       "fields": []
     },
     {
-      "nodeType": "$$.Conds.Evnts.promptAnimVoCircle",
-      "fields": []
-    },{
-      "nodeType": "$$.Conds.Evnts.promptAnimVoSquare",
+      "nodeType": "$$.Conds.isIncorrectTypeSelected",
       "fields": []
     },
     {
-      "nodeType": "$$.Conds.Evnts.inactiveCircle",
+      "nodeType": "$$.Conds.isCorrectTypeSelected",
       "fields": []
     },
     {
-      "nodeType": "$$.Conds.Evnts.inactiveSquare",
-      "fields": []
-    },
-    {
-      "nodeType": "$$.Conds.Evnts.incorrect",
+      "nodeType": "$$.Conds.introNotStarted",
       "fields": []
     }
   ]
