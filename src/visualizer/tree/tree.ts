@@ -3,6 +3,7 @@
  */
 
 import * as Utils from "../utils";
+import {getParent} from "./path";
 export function createNodeUid() {
     var S4 = function() {
         return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -78,8 +79,10 @@ export interface INode {
     readonly fields: ReadonlyArray<Field>;
     readonly fieldNames: ReadonlyArray<string>;
     state: string;
+    collapsed: boolean;
 
     getField(name: string): Field | undefined;
+    children: ReadonlyArray<any>;
     getChild(output: IFieldElementIdentifier): INode | undefined;
 }
 
@@ -162,6 +165,7 @@ export interface INodeBuilder {
     pushNodeArrayField(name: string, value: ReadonlyArray<INode>): boolean;
     pushField(field: Field): boolean;
     pushState(objElement: string): void;
+    pushCollapsed(objElement: boolean): void;
 }
 
 /**
@@ -170,11 +174,12 @@ export interface INodeBuilder {
  * @param callback Callback that can be used to add additional data to this node.
  * @returns Newly constructed (immutable) node
  */
-export function createNode(type: NodeType, callback?: (builder: INodeBuilder) => void): INode {
+export function createNode(type: NodeType, collapsed: boolean = true, callback?: (builder: INodeBuilder) => void): INode {
     if (callback === undefined) {
-        return new NodeImpl(type, [], '');
+        return new NodeImpl(type, [], collapsed, '');
     }
     const builder = new NodeBuilderImpl(type);
+    builder.pushCollapsed(collapsed);
     callback(builder);
     return builder.build();
 }
@@ -185,7 +190,7 @@ export function createNode(type: NodeType, callback?: (builder: INodeBuilder) =>
  * @returns Newly constructed (immutable) none-node.
  */
 export function createNoneNode(): INode {
-    return new NodeImpl(noneNodeType, [], '');
+    return new NodeImpl(noneNodeType, [], true, '');
 }
 
 /**
@@ -211,6 +216,8 @@ export function getNodeCount(node: INode): number {
 export function forEachDirectChild(
     node: INode,
     callback: (node: INode, element: IFieldElementIdentifier) => boolean | void): void {
+    if(node.collapsed === true)
+        return;
 
     for (let fieldIndex = 0; fieldIndex < node.fields.length; fieldIndex++) {
         const field = node.fields[fieldIndex];
@@ -335,8 +342,9 @@ class NodeImpl implements INode {
     private readonly _fields: ReadonlyArray<Field>;
     private uid: string;
     private _state: string;
+    private _collapsed: boolean;
 
-    constructor(type: NodeType, fields: ReadonlyArray<Field>, state?: string) {
+    constructor(type: NodeType, fields: ReadonlyArray<Field>, collapsed: boolean = true, state?: string) {
         if (type === "") {
             throw new Error("Node must has a type");
         }
@@ -347,12 +355,22 @@ class NodeImpl implements INode {
             throw new Error("Field names must be unique");
         }
         this._state = state;
+        this._collapsed = collapsed;
         this._type = type;
         this._id = type;
         this.uid = createNodeUid();
         this._fields = fields;
     }
 
+    get collapsed(): boolean {
+        if(!this.children || this.children.length === 0)
+            return false;
+        return this._collapsed;
+    }
+
+    set collapsed(value: boolean) {
+        this._collapsed = value;
+    }
 
     get id(): string {
         return this._id + "," + this.uid;
@@ -416,6 +434,7 @@ class NodeBuilderImpl implements INodeBuilder {
     private _fields: Field[];
     private _build: boolean;
     private _state: string;
+    private _collapsed: boolean;
 
     constructor(type: NodeType) {
         this._type = type;
@@ -430,6 +449,10 @@ class NodeBuilderImpl implements INodeBuilder {
     public pushState(value: string) : void {
 
         this._state = value;
+    }
+
+    public pushCollapsed(value: boolean) : void {
+        this._collapsed = value;
     }
 
     public pushNumberField(name: string, value: number): boolean {
@@ -484,7 +507,7 @@ class NodeBuilderImpl implements INodeBuilder {
 
     public build(): INode {
         this._build = true;
-        this._fields = this._fields.filter(item => item.name !== 'state');
-        return new NodeImpl(this._type, this._fields, this._state);
+        this._fields = this._fields.filter(item => item.name !== 'state' && item.name !== 'collapsed');
+        return new NodeImpl(this._type, this._fields, this._collapsed, this._state);
     }
 }

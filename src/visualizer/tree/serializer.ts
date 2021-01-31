@@ -34,6 +34,7 @@ export function createObject(node: Tree.INode): object {
     if (node.type !== Tree.anonymousNodeType) {
         obj.$type = node.type;
     }
+    obj.collapsed = node.collapsed;
     node.fields.forEach(field => {
         switch (field.kind) {
             case "string":

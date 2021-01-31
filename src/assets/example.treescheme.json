@@ -44,61 +44,42 @@
         "$$.Hooks.While",
         "$$.Hooks.Until"
       ]
-    },
+    }
+  ],
+  "listItems": [
     {
       "identifier": "$$.Cond",
       "values": [
-        "$$.Conds.isIntroFinished",
-        "$$.Conds.isWinConditionMet",
-        "$$.Conds.isIncorrectTypeSelected",
-        "$$.Conds.isCorrectTypeSelected",
-        "$$.Conds.introNotStarted"
+        {
+          "name": "$$.Conds.isIntroFinished",
+          "value": 0
+        },
+        {
+          "name": "$$.Conds.isWinConditionMet",
+          "value": 1
+        },
+        {
+          "name": "$$.Conds.isIncorrectTypeSelected",
+          "value": 2
+        },
+        {
+          "name": "$$.Conds.isCorrectTypeSelected",
+          "value": 3
+        },
+        {
+          "name": "$$.Conds.introNotStarted",
+          "value": 4
+        }
       ]
-    }
-  ],
-  "enums": [
+    },
     {
       "identifier": "$$.Cmd",
       "values": [
         {
-          "value": 0,
-          "name": "none"
+          "name": "SetAttributesCmd"
         },
         {
-          "value": 1,
-          "name": "animateSpine"
-        },
-        {
-          "value": 2,
-          "name": "doPrompt"
-        },
-        {
-          "value": 3,
-          "name": "promptShown"
-        },
-        {
-          "value": 4,
-          "name": "correctShown"
-        },
-        {
-          "value": 5,
-          "name": "allCorrectShown"
-        },
-        {
-          "value": 6,
-          "name": "setAttribute"
-        },{
-          "value": 7,
-          "name": "reenableIdle"
-        },{
-          "value": 8,
-          "name": "disableIdleTimer"
-        },{
-          "value": 9,
-          "name": "enableIdleTimer"
-        },{
-          "value": 10,
-          "name": "tweenAttributes"
+          "name": "TweenAttributesCmd"
         }
       ]
     }
@@ -126,7 +107,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "children",
@@ -142,7 +123,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.times",
@@ -162,7 +143,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "children",
@@ -176,7 +157,7 @@
       "comment": "Return SUCCESS if condition passes",
       "fields": [
         {
-          "name": "condition",
+          "name": "$condition",
           "valueType": "$$.Cond",
           "isArray": false
         }
@@ -189,7 +170,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "children",
@@ -205,7 +186,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.duration",
@@ -220,7 +201,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "children",
@@ -236,7 +217,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.tickets",
@@ -255,11 +236,11 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.cmd",
-          "valueType": "string",
+          "valueType": "$$.Cmd",
           "isArray": false
         },
         {
@@ -280,7 +261,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.gameObject",
@@ -305,7 +286,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.waitForFinish",
@@ -325,7 +306,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.data",
@@ -340,7 +321,7 @@
         {
           "name": "hooks",
           "valueType": "$$.Hook",
-          "isArray":true
+          "isArray": true
         },
         {
           "name": "$data.variableName",
@@ -388,7 +369,7 @@
       "nodeType": "$$.Hooks.While",
       "fields": [
         {
-          "name": "condition",
+          "name": "$condition",
           "valueType": "$$.Cond",
           "isArray": false
         }
@@ -398,31 +379,11 @@
       "nodeType": "$$.Hooks.Until",
       "fields": [
         {
-          "name": "condition",
+          "name": "$condition",
           "valueType": "$$.Cond",
           "isArray": false
         }
       ]
-    },
-    {
-      "nodeType": "$$.Conds.isIntroFinished",
-      "fields": []
-    },
-    {
-      "nodeType": "$$.Conds.isWinConditionMet",
-      "fields": []
-    },
-    {
-      "nodeType": "$$.Conds.isIncorrectTypeSelected",
-      "fields": []
-    },
-    {
-      "nodeType": "$$.Conds.isCorrectTypeSelected",
-      "fields": []
-    },
-    {
-      "nodeType": "$$.Conds.introNotStarted",
-      "fields": []
     }
   ]
 }

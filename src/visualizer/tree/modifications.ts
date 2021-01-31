@@ -57,7 +57,7 @@ export function fieldWithValue<T extends Tree.Field>(field: T, value: Tree.Field
  * @returns New node with updated field.
  */
 export function nodeWithField(node: Tree.INode, field: Tree.Field): Tree.INode {
-    return Tree.createNode(node.type, b => {
+    return Tree.createNode(node.type, node.collapsed, b => {
         node.fields.forEach(orgField => {
             if (orgField.name === field.name) {
                 b.pushField(field);
@@ -98,7 +98,7 @@ function fieldWithNewNode(origin: Tree.INode, output: Tree.IFieldElementIdentifi
  * @returns New node with the same fields.
  */
 export function cloneNode(node: Tree.INode): Tree.INode {
-    return Tree.createNode(node.type, b => {
+    return Tree.createNode(node.type, node.collapsed, b => {
         node.fields.forEach(orgField => b.pushField(cloneField(orgField)));
     });
 }

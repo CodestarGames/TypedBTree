@@ -9,9 +9,7 @@
         "children": [
           {
             "$type": "$$.Condition",
-            "condition": {
-              "$type": "$$.Conds.introNotStarted"
-            }
+            "$condition": "$$.Conds.introNotStarted"
           },
           {
             "$type": "$$.Actions.SetInteractive",
@@ -83,9 +81,7 @@
         "children": [
           {
             "$type": "$$.Condition",
-            "condition": {
-              "$type": "$$.Conds.isIncorrectTypeSelected"
-            }
+            "$condition": "$$.Conds.isIncorrectTypeSelected"
           },
           {
             "$type": "$$.Actions.SetInteractive",
@@ -127,9 +123,8 @@
         "children": [
           {
             "$type": "$$.Condition",
-            "condition": {
-              "$type": "$$.Conds.isCorrectTypeSelected"
-            }
+            "$condition": "$$.Conds.isCorrectTypeSelected"
+
           },
           {
             "$type": "$$.Actions.SetInteractive",
@@ -171,9 +166,7 @@
         "children": [
           {
             "$type": "$$.Condition",
-            "condition": {
-              "$type": "$$.Conds.isWinConditionMet"
-            }
+            "$condition": "$$.Conds.isWinConditionMet"
           },
           {
             "$type": "$$.Actions.SetInteractive",

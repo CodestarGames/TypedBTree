@@ -111,6 +111,16 @@ export function validateField(
                     } else {
                         return validateEnum(enumeration, field.value as number);
                     }
+                case "listItem":
+                    const listItem = fieldDefinition.valueType;
+                    if (fieldDefinition.isArray) {
+                        const result = (field.value as ReadonlyArray<string>).map(value =>
+                            validateListItem(listItem, value)).
+                        find(r => r !== true);
+                        return result === undefined ? true : result;
+                    } else {
+                        return validateListItem(listItem, field.value as string);
+                    }
                 default:
                     Utils.assertNever(fieldDefinition.valueType);
             }
@@ -125,6 +135,13 @@ function validateEnum(enumeration: TreeScheme.IEnum, value: number): Result {
     return createInvalidEnumValueFailure(enumeration, value);
 }
 
+function validateListItem(listItem: TreeScheme.IListItem, name: string): Result {
+    if (listItem.values.some(e => e.name === name)) {
+        return true;
+    }
+    return createInvalidListItemValueFailure(listItem, name);
+}
+
 function createInvalidNodeTypeFailure(expectedAlias: TreeScheme.IAlias, givenType: Tree.NodeType): IFailure {
     return createFailure(`Invalid node type: '${givenType}'. Valid options: [${
         expectedAlias.values.join(", ")}]`);
@@ -136,13 +153,17 @@ function createInvalidFieldFailure(nodeDefinition: TreeScheme.INodeDefinition, g
 }
 
 function createInvalidFieldTypeFailure(expectedKind: Tree.FieldKind, field: Tree.Field): IFailure {
-    debugger
     return createFailure(`Field '${field.name}' has unexpected type: '${field.kind}', expected: '${expectedKind}'`);
 }
 
 function createInvalidEnumValueFailure(expectedEnum: TreeScheme.IEnum, givenValue: number): IFailure {
     return createFailure(`Invalid enum value '${givenValue}', Valid options: [${
         expectedEnum.values.map(e => `${e.value}: ${e.name}`).join(", ")}]`);
+}
+
+function createInvalidListItemValueFailure(expectedListItem: TreeScheme.IListItem, givenName: string): IFailure {
+    return createFailure(`Invalid listItem name '${givenName}', Valid options: [${
+        expectedListItem.values.map(e => `${e.name}: ${e.name}`).join(", ")}]`);
 }
 
 function createFailure(message: string): IFailure {

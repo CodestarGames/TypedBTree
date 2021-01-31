@@ -34,11 +34,12 @@ export function duplicateWithMissingFields(scheme: TreeScheme.IScheme, tree: Tre
         if (definition === undefined) {
             throw new Error(`Unable to find definition for node-type: ${node.type}`);
         }
-        return Tree.createNode(definition.nodeType, b => {
+        return Tree.createNode(definition.nodeType, node.collapsed, b => {
             // Copy fields from the original if it has them, otherwise create defaults.
             definition.fields.forEach(f => {
                 const orgField = node.getField(f.name);
                 b.pushState(node.state);
+                b.pushCollapsed(node.collapsed);
                 if (orgField !== undefined) {
                     // 'node' and 'nodeArray' need deep-copying, the rest we can use as-is.
                     switch (orgField.kind) {
@@ -79,7 +80,7 @@ export function changeNodeType(scheme: TreeScheme.IScheme, node: Tree.INode, new
     if (newNodeDefinition === undefined) {
         throw new Error(`New node-type ${newNodeType} cannot be found in the given scheme`);
     }
-    return Tree.createNode(newNodeType, b => {
+    return Tree.createNode(newNodeType, node.collapsed, b => {
         newNodeDefinition.fields.forEach(f => {
             /* If the field of the original node is compatible then use that, otherwise create a new
             default field. */
@@ -117,7 +118,7 @@ export function instantiateDefaultNodeType(scheme: TreeScheme.IScheme, nodeType:
  * @returns Newly created node.
  */
 export function instantiateDefaultNode(nodeDefinition: TreeScheme.INodeDefinition): Tree.INode {
-    return Tree.createNode(nodeDefinition.nodeType, b => {
+    return Tree.createNode(nodeDefinition.nodeType, false, b => {
         nodeDefinition.fields.forEach(f => {
             const field = instantiateDefaultField(f);
             b.pushField(field);
@@ -139,7 +140,7 @@ export function instantiateDefaultField(fieldDefinition: TreeScheme.IFieldDefini
         case "json":
             return fieldDefinition.isArray ?
                 { kind: "jsonArray", name: fieldDefinition.name, value: [] } :
-                { kind: "json", name: fieldDefinition.name, value: "" };
+                { kind: "json", name: fieldDefinition.name, value: null };
         case "number":
             return fieldDefinition.isArray ?
                 { kind: "numberArray", name: fieldDefinition.name, value: [] } :
@@ -161,6 +162,14 @@ export function instantiateDefaultField(fieldDefinition: TreeScheme.IFieldDefini
                             kind: "number",
                             name: fieldDefinition.name,
                             value: fieldDefinition.valueType.values[0].value,
+                        };
+                case "listItem":
+                    return fieldDefinition.isArray ?
+                        { kind: "stringArray", name: fieldDefinition.name, value: [] } :
+                        {
+                            kind: "string",
+                            name: fieldDefinition.name,
+                            value: fieldDefinition.valueType.values[0].name,
                         };
                 default: Utils.assertNever(fieldDefinition.valueType);
             }
@@ -184,6 +193,7 @@ export function createNewElement<T extends TreeScheme.FieldValueType>(valueType:
             switch (typedValueType.type) {
                 case "alias": return Tree.createNoneNode() as TreeScheme.TreeType<T>;
                 case "enum": return typedValueType.values[0].value as TreeScheme.TreeType<T>;
+                case "listItem": return typedValueType.values[0].name as TreeScheme.TreeType<T>;
                 default: Utils.assertNever(typedValueType);
             }
     }

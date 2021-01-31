@@ -324,6 +324,20 @@ export function createTextInput(
 }
 
 /**
+ * Create a new Button. Note: This does not get parented anywhere yet.
+ */
+export function createButton(
+    text: string,
+    callback: (newText: string) => void): HTMLButtonElement {
+
+    const element = document.createElement("button");
+    element.innerText = text;
+    element.onclick = event => {
+        callback(element.value);
+    };
+    return element;
+}
+/**
  * Create a new input element of type number. Note: This does not get parented anywhere yet.
  * @param num Initial number to show in the input.
  * @param callback Callback that will get fired when the user changes the input.

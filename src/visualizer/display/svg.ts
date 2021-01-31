@@ -55,6 +55,17 @@ export interface IElement {
         callback: (newValue: string) => void): void;
 
     /**
+     * Add a editable btn graphic to this element.
+     * Note: Position is vertically centered.
+     */
+    addButton(
+        className: Utils.Dom.ClassName,
+        value: string,
+        position: Vector.Position,
+        size: Vector.Size,
+        callback: (newValue: string) => void): void;
+
+    /**
      * Add a editable number graphic to this element.
      * Note: Position is vertically centered.
      */
@@ -359,7 +370,7 @@ class GroupElement implements IElement {
         position: Vector.Position,
         size: Vector.Size): void {
 
-        const textElement = Utils.Dom.createWithText("code", value);
+        const textElement = Utils.Dom.createWithText("code", value.replace('$data.',''));
         textElement.className = `noselect ${className}`;
         this.addForeignObject(position, size, textElement);
     }
@@ -373,6 +384,18 @@ class GroupElement implements IElement {
 
         const inputElement = Utils.Dom.createTextInput(value, callback);
         inputElement.title = (value);
+        inputElement.className = className;
+        this.addForeignObject(position, size, inputElement);
+    }
+
+    public addButton(
+        className: Utils.Dom.ClassName,
+        text: string,
+        position: Vector.Position,
+        size: Vector.Size,
+        callback: (newValue: string) => void): void {
+
+        const inputElement = Utils.Dom.createButton(text, callback);
         inputElement.className = className;
         this.addForeignObject(position, size, inputElement);
     }

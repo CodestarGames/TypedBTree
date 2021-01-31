@@ -8,6 +8,8 @@ import * as Utils from "../utils";
 import { Vector } from "../utils";
 import * as Svg from "./svg";
 import {FieldValueType} from "../treescheme/treescheme";
+import {nodeWidth} from "../tree/positionlookup";
+import {getParent} from "../tree/path";
 
 /** Callback for when a tree is changed, returns a new immutable tree. */
 export type treeChangedCallback = (newTree: Tree.INode) => void;
@@ -28,16 +30,28 @@ export function setTree(
         return;
     }
 
+    root.collapsed = false;
+
     const typeLookup = TreeScheme.TypeLookup.createTypeLookup(scheme, root);
     const positionLookup = Tree.PositionLookup.createPositionLookup(root);
 
     Svg.setContent(b => {
-        positionLookup.nodes.forEach(node => {
-            createNode(b, node, typeLookup, positionLookup, newNode => {
-                if (changed !== undefined) {
-                    changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
-                }
-            });
+        positionLookup.nodes.forEach((node, index) => {
+            if(index === 0){
+                createNode(b, node, typeLookup, positionLookup, newNode => {
+                    if (changed !== undefined) {
+                        changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
+                    }
+                });
+            }
+            else
+            if(getParent(root, node).node.collapsed === false) {
+                createNode(b, node, typeLookup, positionLookup, newNode => {
+                    if (changed !== undefined) {
+                        changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
+                    }
+                });
+            }
         });
     });
     Svg.setContentOffset(positionLookup.rootOffset);
@@ -130,13 +144,32 @@ function createNode(
             const newNode = TreeScheme.Instantiator.changeNodeType(typeLookup.scheme, node, newNodeType);
             changed(newNode);
         });
+    nodeElement.addButton(
+        "node-collapse",
+        node.collapsed ? '+' : "-",
+        { x: nodeWidth - 48, y: halfNodeHeaderHeight - 3 },
+        { x: 40, y: 40 },
+        newIndex => {
+            node.collapsed = !node.collapsed;
+            changed(node);
+        })
 
     let yOffset = nodeHeaderHeight;
-    node.fieldNames.forEach(fieldName => {
-        yOffset += createField(node, definition, fieldName, nodeElement, positionLookup, yOffset, newField => {
-            changed(Tree.Modifications.nodeWithField(node, newField));
+    if(node.collapsed === false) {
+        node.fieldNames.forEach(fieldName => {
+            yOffset += createField(node, definition, fieldName, nodeElement, positionLookup, yOffset, newField => {
+                changed(Tree.Modifications.nodeWithField(node, newField));
+            });
         });
-    });
+    }
+    else {
+            //
+            // node.children && node.children.forEach(child => {
+            //     addConnection(nodeElement, {x: nodeWidth, y: halfNodeHeaderHeight}, getRelativeVector(node, child, positionLookup));
+            // })
+
+
+    }
 
     if (definition !== undefined && definition.comment !== undefined) {
         const infoElement = nodeElement.addElement("node-info", Vector.zeroVector);
@@ -278,8 +311,11 @@ function createField(
 
         const pos: Vector.Position = { x: nameWidth + xOffset, y: centeredYOffset + yOffset } //+ (Tree.PositionLookup.getFieldHeight(field) / 2) - 16};
         const size: Vector.Size = { x: fieldSize.x - pos.x, y: nodeFieldHeight };
-        if(isJson){
-            createStringValue(JSON.stringify(element, null, 2), pos, size, changed as elementChangedCallback<string>);
+        if(isJson) {
+            createStringValue(JSON.stringify(element, null, 2), pos, size, ((newVal) => {
+                newVal = JSON.parse(newVal);
+                changed(newVal);
+            }) as elementChangedCallback<any>);
             return;
         }
         switch (typeof element) {
@@ -288,6 +324,7 @@ function createField(
             case "boolean": createBooleanValue(element, pos, size, changed as elementChangedCallback<boolean>); break;
             default: createNodeValue(element as Tree.INode, pos, size); break;
         }
+
     }
 
     function createStringValue(
@@ -295,6 +332,19 @@ function createField(
         pos: Vector.Position,
         size: Vector.Size,
         changed: elementChangedCallback<string>): void {
+
+        // If the number is an listItem then display it as a dropdown.
+        if (fieldDefinition !== undefined) {
+            const listItem = TreeScheme.validateListItemType(fieldDefinition.valueType);
+            if (listItem !== undefined) {
+                const currentIndex = listItem.values.findIndex(entry => entry.name === value);
+                const options = listItem.values.map(entry => `${entry.name}`);
+                parent.addDropdown("list-item-value", currentIndex, options, pos, size, newIndex => {
+                    changed(listItem.values[newIndex].name);
+                });
+                return;
+            }
+        }
 
         parent.addEditableText("string-value", value, pos, size, changed);
     }
@@ -321,6 +371,29 @@ function createField(
         // Otherwise display it as a number input.
         parent.addEditableNumber("number-value", value, pos, size, changed);
     }
+
+    // function createCondValue(
+    //     value: string,
+    //     pos: Vector.Position,
+    //     size: Vector.Size,
+    //     changed: elementChangedCallback<string>): void {
+    //
+    //     // If the number is an enumeration then display it as a dropdown.
+    //     if (fieldDefinition !== undefined) {
+    //         const listItem = TreeScheme.validateListItemType(fieldDefinition.valueType);
+    //         if (listItem !== undefined) {
+    //             const currentIndex = listItem.values.findIndex(entry => entry.name === value);
+    //             const options = listItem.values.map(entry => `${entry.name}: ${entry.name}`);
+    //             parent.addDropdown("listItem-value", currentIndex, options, pos, size, newIndex => {
+    //                 changed(listItem.values[newIndex].name);
+    //             });
+    //             return;
+    //         }
+    //     }
+    //
+    //     // Otherwise display it as a number input.
+    //     parent.addEditableText("string-value", value, pos, size, changed);
+    // }
 
     function createBooleanValue(
         value: boolean,

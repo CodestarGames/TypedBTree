@@ -67,6 +67,7 @@ function parseScheme(obj: any): TreeScheme.IScheme {
     return TreeScheme.createScheme(rootAliasIdentifier, schemeBuilder => {
         parseAliases(schemeBuilder, obj);
         parseEnums(schemeBuilder, obj);
+        parseListItems(schemeBuilder, obj);
         parseNodes(schemeBuilder, obj);
     });
 }
@@ -93,6 +94,40 @@ function parseAliases(schemeBuilder: TreeScheme.ISchemeBuilder, obj: any): void 
         // Add to scheme
         if (schemeBuilder.pushAlias(identifier, values) === undefined) {
             throw new Error(`Unable to push alias '${identifier}', is it a duplicate?`);
+        }
+    });
+}
+
+function parseListItems(schemeBuilder: TreeScheme.ISchemeBuilder, obj: any): void {
+    if (!Utils.Parser.isArray(obj.listItems)) {
+        return;
+    }
+
+    (obj.listItems as any[]).forEach(listItemObj => {
+
+        // Parse identifier
+        const identifier = Utils.Parser.validateString(listItemObj.identifier);
+        if (identifier === undefined) {
+            throw new Error(`Identifier '${identifier}' of listItem is invalid`);
+        }
+
+        // Parse values
+        const values: TreeScheme.IListItemEntry[] = [];
+        if (!Utils.Parser.isArray(listItemObj.values)) {
+            throw new Error(`ListItem '${identifier}' has no values`);
+        }
+
+        (listItemObj.values as any[]).forEach(valueObj => {
+            const name = Utils.Parser.validateString(valueObj.name);
+            if (name === undefined) {
+                throw new Error(`ListItem '${identifier}' has a entry that is missing a 'name' field`);
+            }
+            values.push({ name });
+        });
+
+        // Add to scheme
+        if (schemeBuilder.pushListItem(identifier, values) === undefined) {
+            throw new Error(`Unable to push listItem '${identifier}', is it a duplicate?`);
         }
     });
 }
@@ -184,10 +219,10 @@ function parseValueType(schemeBuilder: TreeScheme.ISchemeBuilder, obj: any): Tre
         case "boolean":
             return str;
         default:
-            const aliasOrEnum = schemeBuilder.getAliasOrEnum(str);
-            if (aliasOrEnum === undefined) {
-                throw new Error(`No alias/enum found with identifier: '${str}'`);
+            const aliasOrEnumOrListItem = schemeBuilder.getAliasOrEnumOrListItem(str);
+            if (aliasOrEnumOrListItem === undefined) {
+                throw new Error(`No alias/enum/listItem found with identifier: '${str}'`);
             }
-            return aliasOrEnum;
+            return aliasOrEnumOrListItem;
     }
 }

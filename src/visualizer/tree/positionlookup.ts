@@ -78,7 +78,7 @@ export function createPositionLookup(root: Tree.INode): IPositionLookup {
  * @returns Number representing the height of the given node.
  */
 export function getNodeHeight(node: Tree.INode): number {
-    return nodeHeaderHeight + node.fields.map(getFieldHeight).reduce(Utils.add, 0);
+    return nodeHeaderHeight + ((node.collapsed) ? 0 : node.fields.map(getFieldHeight).reduce(Utils.add, 0));
 }
 
 /**

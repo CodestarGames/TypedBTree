@@ -6,7 +6,7 @@ import * as Tree from "../tree";
 import * as Utils from "../utils";
 
 /** Possible types a field can have */
-export type FieldValueType = "string" | "number" | "boolean" | "json" | IAlias | IEnum;
+export type FieldValueType = "string" | "number" | "boolean" | "json" | IAlias | IEnum | IListItem;
 
 /** Extract an identifier out of a FieldValueType */
 export type FieldValueTypeIdentifier<T extends FieldValueType> =
@@ -26,6 +26,7 @@ interface ITreeTypeMap {
     "boolean": boolean;
     "alias": Tree.INode;
     "enum": number;
+    "listItem": string;
 }
 
 /**
@@ -61,6 +62,20 @@ export interface IEnumEntry {
     readonly name: string;
 }
 
+/** listItem entry (Named string) */
+export interface IListItemEntry {
+    readonly name: string;
+}
+
+/** listItem (Set of named strings)  */
+export interface IListItem {
+    readonly type: "listItem";
+    readonly identifier: string;
+    readonly values: ReadonlyArray<IListItemEntry>;
+
+    getName(name: string): string | undefined;
+}
+
 /** Enumeration (Set of named numbers)  */
 export interface IEnum {
     readonly type: "enum";
@@ -90,10 +105,11 @@ export interface IFieldDefinition {
 export interface ISchemeBuilder {
     pushAlias(identifier: string, values: ReadonlyArray<Tree.NodeType>): IAlias | undefined;
     pushEnum(identifier: string, values: ReadonlyArray<IEnumEntry>): IEnum | undefined;
+    pushListItem(identifier: string, values: ReadonlyArray<IListItemEntry>): IListItem | undefined;
 
     getAlias(identifier: string): IAlias | undefined;
     getEnum(identifier: string): IEnum | undefined;
-    getAliasOrEnum(identifier: string): IAlias | IEnum | undefined;
+    getAliasOrEnumOrListItem(identifier: string): IAlias | IEnum | IListItem | undefined;
 
     pushNodeDefinition(nodeType: Tree.NodeType, callback?: (builder: INodeDefinitionBuilder) => void): boolean;
 }
@@ -193,6 +209,26 @@ export function validateEnumType(fieldValueType: FieldValueType): IEnum | undefi
 }
 
 /**
+ * Validate that the given 'fieldValueType' is an ListItem.
+ * @param fieldValueType FieldValueType to check.
+ * @returns IListItem if the field value is a ListItem, otherwise undefined.
+ */
+export function validateListItemType(fieldValueType: FieldValueType): IListItem | undefined {
+    switch (fieldValueType) {
+        case "string":
+        case "json":
+        case "number":
+        case "boolean":
+            return undefined;
+        default:
+            if (fieldValueType.type !== "listItem") {
+                return undefined;
+            }
+            return fieldValueType;
+    }
+}
+
+/**
  * Get a FieldKind from a field-definition.
  * @param field Definition of a field to get the field-kind for.
  * @returns FieldKind that corresponds for the given field-definition.
@@ -210,6 +246,9 @@ export function getFieldKind(field: IFieldDefinition): Tree.FieldKind {
                 case "enum":
                     // Enums are actually represented by numbers (as they are just named numbers)
                     return field.isArray ? "numberArray" : "number";
+                case "listItem":
+                    // Enums are actually represented by numbers (as they are just named numbers)
+                    return field.isArray ? "stringArray" : "string";
                 default:
                     Utils.assertNever(field.valueType);
             }
@@ -270,12 +309,14 @@ class SchemeImpl implements IScheme {
     private readonly _rootAlias: IAlias;
     private readonly _aliases: ReadonlyArray<IAlias>;
     private readonly _enums: ReadonlyArray<IEnum>;
+    private readonly _listItems: ReadonlyArray<IListItem>;
     private readonly _nodes: ReadonlyArray<INodeDefinition>;
 
     constructor(
         rootAlias: IAlias,
         aliases: ReadonlyArray<IAlias>,
         enums: ReadonlyArray<IEnum>,
+        listItems: ReadonlyArray<IListItem>,
         nodes: ReadonlyArray<INodeDefinition>) {
 
         // Verify that root-alias exists in the aliases array.
@@ -303,6 +344,7 @@ class SchemeImpl implements IScheme {
         this._rootAlias = rootAlias;
         this._aliases = aliases;
         this._enums = enums;
+        this._listItems = listItems;
         this._nodes = nodes;
     }
 
@@ -433,6 +475,56 @@ class EnumImpl implements IEnum {
     }
 }
 
+class ListItemImpl implements IListItem {
+    private readonly _identifier: string;
+    private readonly _values: ReadonlyArray<IListItemEntry>;
+
+    constructor(identifier: string, values: ReadonlyArray<IListItemEntry>) {
+        // Verify that this listItem has a identifier
+        if (identifier === "") {
+            throw new Error("ListItem must have a identifier");
+        }
+        // Verify that the values at least contain 1 entry and no duplicates
+        if (values.length === 0) {
+            throw new Error("COnd must have at least one value");
+        }
+        if (Utils.hasDuplicates(values.map(entry => entry.name))) {
+            throw new Error("ListItem names must be unique");
+        }
+
+        this._identifier = identifier;
+        this._values = values;
+    }
+
+    get type(): "listItem" {
+        return "listItem";
+    }
+
+    get id(): string {
+        return this.identifier;
+    }
+
+    get children(): ReadonlyArray<any> {
+        return this._values.map(item => ({id: item.name})) || undefined;
+    }
+
+    get identifier(): string {
+        return this._identifier;
+    }
+
+    get values(): ReadonlyArray<IListItemEntry> {
+        return this._values;
+    }
+
+    public getName(name: string): string | undefined {
+        const index = this._values.findIndex(entry => entry.name === name);
+        if (index < 0) {
+            return undefined;
+        }
+        return this._values[index].name;
+    }
+}
+
 class NodeDefinitionImpl implements INodeDefinition {
     private readonly _nodeType: Tree.NodeType;
     private readonly _comment: string | undefined;
@@ -485,6 +577,7 @@ class SchemeBuilderImpl implements ISchemeBuilder {
     private _rootAliasIdentifier: string;
     private _aliases: IAlias[];
     private _enums: IEnum[];
+    private _listItems: IListItem[];
     private _nodes: INodeDefinition[];
     private _build: boolean;
 
@@ -492,6 +585,7 @@ class SchemeBuilderImpl implements ISchemeBuilder {
         this._rootAliasIdentifier = rootAliasIdentifier;
         this._aliases = [];
         this._enums = [];
+        this._listItems = [];
         this._nodes = [];
     }
 
@@ -507,6 +601,12 @@ class SchemeBuilderImpl implements ISchemeBuilder {
             return undefined;
         }
 
+        // Aliases/ListItems have to unique
+        if (this._aliases.some(existingAlias => existingAlias.identifier === identifier) ||
+            this._listItems.some(existingEnum => existingEnum.identifier === identifier)) {
+            return undefined;
+        }
+
         try {
             const alias = new AliasImpl(identifier, values);
             this._aliases.push(alias);
@@ -515,6 +615,33 @@ class SchemeBuilderImpl implements ISchemeBuilder {
         catch (e) {
             if (e instanceof Error) {
                 throw Error(`Invalid alias '${identifier}': ${e.message}`);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+
+    public pushListItem(identifier: string, values: ReadonlyArray<IListItemEntry>): IListItem | undefined {
+        // New content cannot be pushed after building the scheme
+        if (this._build) {
+            return undefined;
+        }
+
+        // Aliases/Enums have to unique
+        if (this._listItems.some(existingEnum => existingEnum.identifier === identifier) ||
+            this._aliases.some(existingAlias => existingAlias.identifier === identifier)) {
+            return undefined;
+        }
+
+        try {
+            const listItemEntry = new ListItemImpl(identifier, values);
+            this._listItems.push(listItemEntry);
+            return listItemEntry;
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                throw Error(`Invalid listItem '${identifier}': ${e.message}`);
             } else {
                 throw e;
             }
@@ -555,11 +682,21 @@ class SchemeBuilderImpl implements ISchemeBuilder {
         return Utils.find(this._enums, e => e.identifier === identifier);
     }
 
-    public getAliasOrEnum(identifier: string): IAlias | IEnum | undefined {
+    public getListItem(identifier: string): IListItem | undefined {
+        return Utils.find(this._listItems, e => e.identifier === identifier);
+    }
+
+    public getAliasOrEnumOrListItem(identifier: string): IAlias | IEnum | IListItem | undefined {
         const alias = this.getAlias(identifier);
         if (alias !== undefined) {
             return alias;
         }
+
+        const listItem = this.getListItem(identifier);
+        if (listItem !== undefined) {
+            return listItem;
+        }
+
         return this.getEnum(identifier);
     }
 
@@ -593,7 +730,7 @@ class SchemeBuilderImpl implements ISchemeBuilder {
         if (rootAlias === undefined) {
             throw new Error(`Root alias '${this._rootAliasIdentifier}' not found in alias set`);
         }
-        return new SchemeImpl(rootAlias, this._aliases, this._enums, this._nodes);
+        return new SchemeImpl(rootAlias, this._aliases, this._enums, this._listItems, this._nodes);
     }
 }
 

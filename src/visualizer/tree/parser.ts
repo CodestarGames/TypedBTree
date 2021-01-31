@@ -68,10 +68,13 @@ function parseNode(obj: any): Tree.INode {
         }
     }
 
-    return Tree.createNode(type, b => {
+    return Tree.createNode(type, obj.collapsed, b => {
         Object.keys(obj).forEach(key => {
             if(key === 'state'){
                 b.pushState(obj[key]);
+            }
+            if(key === 'collapsed'){
+                b.pushCollapsed(obj[key]);
             }
             if (key !== "$type") {
                 const field = parseField(key, obj[key]);
@@ -89,7 +92,11 @@ function parseField(name: string, value: any): Tree.Field | undefined {
     }
 
     switch (typeof value) {
-        case "string": return { kind: "string", name, value };
+        case "string":
+            if(value.indexOf("{") > 0)
+                return { kind: "json", name, value };
+
+            return { kind: "string", name, value };
         case "number": return { kind: "number", name, value };
         case "boolean": return { kind: "boolean", name, value };
         case "object": {
@@ -115,6 +122,7 @@ function parseField(name: string, value: any): Tree.Field | undefined {
             } else {
                 if(name === '$data.data' || name.toLowerCase().indexOf('config') > -1)
                     return { kind: "json", name, value };
+
                 return { kind: "node", name, value: parseNode(value) };
             }
         }
