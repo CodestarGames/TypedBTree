@@ -102,6 +102,7 @@ body button:disabled {
     font-family: "system-ui";
     vertical-align: middle;
     justify-content: space-between;
+    margin: 0px;
 }
 
 #zoomcontrols-container button {

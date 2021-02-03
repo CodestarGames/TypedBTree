@@ -4,6 +4,7 @@
 
 import * as Utils from "../utils";
 import * as Tree from "./tree";
+import {debug} from "webpack";
 
 /**
  * Load a tree as json from the given file or url.
@@ -68,7 +69,7 @@ function parseNode(obj: any): Tree.INode {
         }
     }
 
-    return Tree.createNode(type, obj.collapsed, b => {
+    return Tree.createNode(type, obj.collapsed, obj.state, b => {
         Object.keys(obj).forEach(key => {
             if(key === 'state'){
                 b.pushState(obj[key]);
@@ -108,7 +109,8 @@ function parseField(name: string, value: any): Tree.Field | undefined {
 
                 const arrayType = getArrayType(array);
                 switch (arrayType) {
-                    case "string": return { kind: "stringArray", name, value: array };
+                    case "string":
+                        return { kind: "stringArray", name, value: array };
                     case "number": return { kind: "numberArray", name, value: array };
                     case "boolean": return { kind: "booleanArray", name, value: array };
                     case "object": {

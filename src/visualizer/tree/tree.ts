@@ -174,12 +174,13 @@ export interface INodeBuilder {
  * @param callback Callback that can be used to add additional data to this node.
  * @returns Newly constructed (immutable) node
  */
-export function createNode(type: NodeType, collapsed: boolean = true, callback?: (builder: INodeBuilder) => void): INode {
+export function createNode(type: NodeType, collapsed: boolean = true, state: string = 'ready', callback?: (builder: INodeBuilder) => void): INode {
     if (callback === undefined) {
         return new NodeImpl(type, [], collapsed, '');
     }
     const builder = new NodeBuilderImpl(type);
     builder.pushCollapsed(collapsed);
+    builder.pushState(state);
     callback(builder);
     return builder.build();
 }
@@ -337,6 +338,9 @@ export function printNode(node: INode, indent: number = 0, printLine: (line: str
 }
 
 class NodeImpl implements INode {
+    set state(value: string) {
+        this._state = value;
+    }
     private readonly _id: string;
     private readonly _type: NodeType;
     private readonly _fields: ReadonlyArray<Field>;

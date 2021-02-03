@@ -5,6 +5,7 @@
     "$type": "$$.Selector",
     "children": [
       {
+        "hooks": [],
         "$type": "$$.Sequence",
         "children": [
           {
@@ -13,33 +14,41 @@
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": false
             }
           },
           {
             "$type": "$$.Actions.Execute",
+            "collapsed": false,
             "$data.cmd": "SetAttributesCmd",
             "$data.gameObject": "tisaSpine",
-            "$data.data": { "visible" :true }
+            "$data.data": {
+              "visible": true
+            }
           },
           {
             "$type": "$$.Actions.Execute",
+            "collapsed": false,
             "$data.cmd": "TweenAttributesCmd",
             "$data.gameObject": "tisaSpine",
             "$data.data": {
               "duration": 250,
               "easing": "Quad.easeOut",
               "props": {
-                "x": { "value": "-=750"}
+                "x": {
+                  "value": "-=750"
+                }
               }
             }
           },
           {
             "$type": "$$.Actions.PlaySpineAnimationCmd",
+            "collapsed": false,
             "$data.gameObject": "tisaSpine",
             "$data.animConfig": {
-              "animationName" : "ShaperyBakery/ShaperyBakery_Intro_v02",
+              "animationName": "ShaperyBakery/ShaperyBakery_Intro_v02",
               "loop": false,
               "ignoreIfPlaying": false
             },
@@ -48,35 +57,160 @@
             }
           },
           {
-            "$type": "$$.Actions.PlaySpineAnimationCmd",
-            "$data.gameObject": "tisaSpine",
-            "$data.animConfig": {
-              "animationName" : "ShaperyBakery/ShaperyBakery_Statement_Circle_v02",
-              "loop": false,
-              "ignoreIfPlaying": false
-            },
-            "$data.sndConfig": {
-              "key": "SB_Tisa_Statement_Circle"
-            }
+            "hooks": [],
+            "$type": "$$.Parallel",
+            "children": [
+              {
+                "hooks": [],
+                "$type": "$$.Sequence",
+                "children": [
+                  {
+                    "hooks": [],
+                    "$type": "$$.Wait",
+                    "$data.duration": 2200
+                  },
+                  {
+                    "$type": "$$.Actions.Execute",
+                    "collapsed": false,
+                    "$data.cmd": "TweenAttributesCmd",
+                    "$data.gameObject": "*_shape",
+                    "$data.data": {
+                      "duration": 250,
+                      "easing": "Quad.easeOut",
+                      "yoyo": true,
+                      "props": {
+                        "y": "-=20"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "$type": "$$.Actions.PlaySpineAnimationCmd",
+                "collapsed": false,
+                "$data.gameObject": "tisaSpine",
+                "$data.animConfig": {
+                  "animationName": "ShaperyBakery/ShaperyBakery_Statement_Circle_v02",
+                  "loop": false,
+                  "ignoreIfPlaying": false
+                },
+                "$data.sndConfig": {
+                  "key": "SB_Tisa_Statement_Circle"
+                }
+              }
+            ]
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": true
             }
           },
           {
             "$type": "$$.Actions.SetBlkBrdVar",
+            "collapsed": false,
             "$data.variableName": "$$.Vars.isIntroFinished",
             "$data.data": {
               "value": true
             }
           }
-
         ]
-
       },
       {
+        "hooks": [],
+        "$type": "$$.Sequence",
+        "children": [
+          {
+            "$type": "$$.Condition",
+            "$condition": "$$.Conds.gameIsNotOver"
+          },
+          {
+            "hooks": [],
+            "$type": "$$.Wait",
+            "$data.duration": 1000
+          },
+          {
+            "$type": "$$.Condition",
+            "$condition": "$$.Conds.inactiveTimerLt4Secs"
+          },
+          {
+            "$type": "$$.Actions.SetBlkBrdVar",
+            "collapsed": false,
+            "$data.variableName": "$$.Vars.inactiveTimerSecs",
+            "$data.data": {
+              "value": "+=1"
+            }
+          },
+          {
+            "$type": "$$.Condition",
+            "$condition": "$$.Conds.inactiveTimerGte4Secs"
+          },
+          {
+            "hooks": [],
+            "$type": "$$.Sequence",
+            "children": [
+              {
+                "$type": "$$.Actions.SetInteractive",
+                "collapsed": false,
+                "$data.data": {
+                  "value": false
+                }
+              },
+              {
+                "hooks": [],
+                "$type": "$$.Lotto",
+                "$data.tickets": "5,5",
+                "children": [
+                  {
+                    "$type": "$$.Actions.PlaySpineAnimationCmd",
+                    "collapsed": false,
+                    "$data.gameObject": "tisaSpine",
+                    "$data.animConfig": {
+                      "animationName": "ShaperyBakery/ShaperyBakery_Tap_Circle_v02",
+                      "loop": false,
+                      "ignoreIfPlaying": false
+                    },
+                    "$data.sndConfig": {
+                      "key": "SB_Tisa_TapCircle"
+                    }
+                  },
+                  {
+                    "$type": "$$.Actions.PlaySpineAnimationCmd",
+                    "collapsed": false,
+                    "$data.gameObject": "tisaSpine",
+                    "$data.animConfig": {
+                      "animationName": "ShaperyBakery/ShaperyBakery_ShapeSides_Circle_v01",
+                      "loop": false,
+                      "ignoreIfPlaying": false
+                    },
+                    "$data.sndConfig": {
+                      "key": "SB_Tisa_ShapeSides_Circle"
+                    }
+                  }
+                ]
+              },
+              {
+                "$type": "$$.Actions.SetInteractive",
+                "collapsed": false,
+                "$data.data": {
+                  "value": true
+                }
+              },
+              {
+                "$type": "$$.Actions.SetBlkBrdVar",
+                "collapsed": false,
+                "$data.variableName": "$$.Vars.inactiveTimerSecs",
+                "$data.data": {
+                  "value": 0
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "hooks": [],
         "$type": "$$.Sequence",
         "children": [
           {
@@ -85,15 +219,17 @@
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": false
             }
           },
           {
             "$type": "$$.Actions.PlaySpineAnimationCmd",
+            "collapsed": false,
             "$data.gameObject": "tisaSpine",
             "$data.animConfig": {
-              "animationName" : "ShaperyBakery/ShaperyBakery_Wrong01_v02",
+              "animationName": "ShaperyBakery/ShaperyBakery_Wrong01_v02",
               "loop": false,
               "ignoreIfPlaying": false
             },
@@ -103,40 +239,54 @@
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": true
             }
           },
           {
             "$type": "$$.Actions.SetBlkBrdVar",
+            "collapsed": false,
             "$data.variableName": "$$.Vars.incorrectSelectedType",
             "$data.data": {
               "value": null
             }
           }
-
         ]
-
       },
       {
+        "hooks": [],
         "$type": "$$.Sequence",
         "children": [
           {
             "$type": "$$.Condition",
+            "$condition": "$$.Conds.gameIsNotOver"
+          },
+          {
+            "$type": "$$.Condition",
             "$condition": "$$.Conds.isCorrectTypeSelected"
+          },
+          {
+            "$type": "$$.Flip",
+            "children": {
+                "$type": "$$.Condition",
+                "$condition": "$$.Conds.isWinConditionMet"
+              }
 
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": false
             }
           },
           {
             "$type": "$$.Actions.PlaySpineAnimationCmd",
+            "collapsed": false,
             "$data.gameObject": "tisaSpine",
             "$data.animConfig": {
-              "animationName" : "ShaperyBakery/ShaperyBakery_Correct_Circle_v02",
+              "animationName": "ShaperyBakery/ShaperyBakery_Correct_Circle_v02",
               "loop": false,
               "ignoreIfPlaying": false
             },
@@ -146,22 +296,23 @@
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": true
             }
           },
           {
             "$type": "$$.Actions.SetBlkBrdVar",
+            "collapsed": false,
             "$data.variableName": "$$.Vars.correctSelectedType",
             "$data.data": {
               "value": null
             }
           }
-
         ]
-
       },
       {
+        "hooks": [],
         "$type": "$$.Sequence",
         "children": [
           {
@@ -170,12 +321,14 @@
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": false
             }
           },
           {
             "$type": "$$.Actions.PlaySoundCmd",
+            "collapsed": false,
             "$data.waitForFinish": false,
             "$data.sndConfig": {
               "key": "Sumville_BAKERY_GAME_COMPLETED"
@@ -183,9 +336,10 @@
           },
           {
             "$type": "$$.Actions.PlaySpineAnimationCmd",
+            "collapsed": false,
             "$data.gameObject": "tisaSpine",
             "$data.animConfig": {
-              "animationName" : "ShaperyBakery/ShaperyBakery_Done_v03",
+              "animationName": "ShaperyBakery/ShaperyBakery_Done_v03",
               "loop": false,
               "ignoreIfPlaying": false
             },
@@ -195,23 +349,21 @@
           },
           {
             "$type": "$$.Actions.SetInteractive",
+            "collapsed": false,
             "$data.data": {
               "value": false
             }
           },
           {
             "$type": "$$.Actions.SetBlkBrdVar",
+            "collapsed": false,
             "$data.variableName": "$$.Vars.isGameOver",
             "$data.data": {
               "value": true
             }
           }
-
         ]
-
       }
     ]
-
   }
-
 }

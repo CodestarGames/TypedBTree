@@ -1,23 +1,9 @@
 {
-  "rootAlias": "$$.Root",
+
   "aliases": [
-    {
-      "identifier": "$$.Root",
-      "values": [
-        "$$.Root"
-      ]
-    },
     {
       "identifier": "$$.Item",
       "values": [
-        "$$.Selector",
-        "$$.Sequence",
-        "$$.Parallel",
-        "$$.Wait",
-        "$$.Flip",
-        "$$.Lotto",
-        "$$.Condition",
-        "$$.Repeat",
         "$$.Actions.Execute",
         "$$.Actions.SetBlkBrdVar",
         "$$.Actions.PlaySpineAnimationCmd",
@@ -33,16 +19,6 @@
         "$$.Actions.PlaySpineAnimationCmd",
         "$$.Actions.SetInteractive",
         "$$.Actions.PlaySoundCmd"
-      ]
-    },
-    {
-      "identifier": "$$.Hook",
-      "values": [
-        "$$.Hooks.Entry",
-        "$$.Hooks.Exit",
-        "$$.Hooks.Step",
-        "$$.Hooks.While",
-        "$$.Hooks.Until"
       ]
     }
   ],
@@ -69,6 +45,15 @@
         {
           "name": "$$.Conds.introNotStarted",
           "value": 4
+        },
+        {"name": "$$.Conds.inactiveTimerLt4Secs",
+          "value":  7
+        },
+        {"name": "$$.Conds.inactiveTimerGte4Secs",
+          "value":  8
+        },
+        {"name": "$$.Conds.gameIsNotOver",
+          "value":  10
         }
       ]
     },
@@ -85,151 +70,6 @@
     }
   ],
   "nodes": [
-    {
-      "nodeType": "$$.Root",
-      "comment": "Invoke the tree",
-      "fields": [
-        {
-          "name": "children",
-          "valueType": "$$.Item",
-          "isArray": false
-        },
-        {
-          "name": "$data.treeName",
-          "valueType": "string"
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Selector",
-      "comment": "Invoke the first child that succeeds",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray": true
-        },
-        {
-          "name": "children",
-          "valueType": "$$.Item",
-          "isArray": true
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Repeat",
-      "comment": "Invoke X number of times",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray": true
-        },
-        {
-          "name": "$data.times",
-          "valueType": "number"
-        },
-        {
-          "name": "children",
-          "valueType": "$$.Item",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Sequence",
-      "comment": "Invoke all children in sequence (the first one that fails stops the chain)",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray": true
-        },
-        {
-          "name": "children",
-          "valueType": "$$.Item",
-          "isArray": true
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Condition",
-      "comment": "Return SUCCESS if condition passes",
-      "fields": [
-        {
-          "name": "$condition",
-          "valueType": "$$.Cond",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Parallel",
-      "comment": "",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray": true
-        },
-        {
-          "name": "children",
-          "valueType": "$$.Item",
-          "isArray": true
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Wait",
-      "comment": "",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray": true
-        },
-        {
-          "name": "$data.duration",
-          "valueType": "number"
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Flip",
-      "comment": "",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray": true
-        },
-        {
-          "name": "children",
-          "valueType": "$$.Item",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Lotto",
-      "comment": "",
-      "fields": [
-        {
-          "name": "hooks",
-          "valueType": "$$.Hook",
-          "isArray": true
-        },
-        {
-          "name": "$data.tickets",
-          "valueType": "string"
-        },
-        {
-          "name": "children",
-          "valueType": "$$.Item",
-          "isArray": true
-        }
-      ]
-    },
     {
       "nodeType": "$$.Actions.Execute",
       "fields": [
@@ -331,56 +171,6 @@
         {
           "name": "$data.data",
           "valueType": "json",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Hooks.Entry",
-      "fields": [
-        {
-          "name": "action",
-          "valueType": "$$.Action",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Hooks.Step",
-      "fields": [
-        {
-          "name": "action",
-          "valueType": "$$.Action",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Hooks.Exit",
-      "fields": [
-        {
-          "name": "action",
-          "valueType": "$$.Action",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Hooks.While",
-      "fields": [
-        {
-          "name": "$condition",
-          "valueType": "$$.Cond",
-          "isArray": false
-        }
-      ]
-    },
-    {
-      "nodeType": "$$.Hooks.Until",
-      "fields": [
-        {
-          "name": "$condition",
-          "valueType": "$$.Cond",
           "isArray": false
         }
       ]

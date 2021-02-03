@@ -4,6 +4,7 @@
 
 import * as Utils from "../utils";
 import * as TreeScheme from "./treescheme";
+import { schemas, rootAlias, baseItemAliases } from 'TypedBTreeRuntime/src';
 
 /**
  * Load a scheme as json from the given file or url.
@@ -30,6 +31,9 @@ export function parseJson(jsonString: string): Utils.Parser.ParseResult<TreeSche
     let jsonObj: any;
     try {
         jsonObj = JSON.parse(jsonString);
+
+        //TODO: write the base typedbtree schema nodes here. iterate through all the base classes for this.
+
     } catch (e) {
         return Utils.Parser.createError(`Parsing failed: ${e}`);
     }
@@ -58,6 +62,20 @@ function parseScheme(obj: any): TreeScheme.IScheme {
     if (obj === undefined || obj === null || typeof obj !== "object") {
         throw new Error("Invalid input obj");
     }
+
+    //append base fields to json.
+    obj = Object.assign(obj, rootAlias);
+    obj.nodes = obj.nodes.concat(Object.values(schemas));
+    let itemIndex = obj.aliases.findIndex(item => item.identifier === '$$.Item');
+    let baseItemIndex = baseItemAliases.findIndex(item => item.identifier === '$$.Item');
+    baseItemAliases[baseItemIndex].values = baseItemAliases[baseItemIndex].values.concat(obj.aliases[itemIndex].values);
+
+    let actionIndex = obj.aliases.findIndex(item => item.identifier === '$$.Action');
+    let baseActionIndex = baseItemAliases.findIndex(item => item.identifier === '$$.Action');
+    baseItemAliases[baseActionIndex].values = baseItemAliases[baseActionIndex].values.concat(obj.aliases[actionIndex].values);
+
+    obj.aliases = baseItemAliases;
+
 
     const rootAliasIdentifier = Utils.Parser.validateString(obj.rootAlias);
     if (rootAliasIdentifier === undefined) {

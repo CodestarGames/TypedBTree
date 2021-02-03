@@ -10,7 +10,7 @@ import { Vector } from "../utils";
 import * as Tree from "./tree";
 
 /** Height for the header (the part that contains the type) of a node. */
-export const nodeHeaderHeight = 50;
+export const nodeHeaderHeight = 40;
 
 /** Width of a node. */
 export const nodeWidth = 320;
@@ -19,16 +19,16 @@ export const nodeWidth = 320;
 export const nodeHorizontalSpacing = 100;
 
 /** Vertical spacing between nodes. */
-export const nodeVerticalSpacing = 25;
+export const nodeVerticalSpacing = 36;
 
 /**
  * Apply extra vertical spacing the deeper in the tree we go, this visually separates the different
  * branches.
  */
-export const nodeExtraVerticalSpacingPerTier = 50;
+export const nodeExtraVerticalSpacingPerTier = 40;
 
 /** Height of a single field element on a node. (Arrays multiply this by the array length) */
-export const nodeFieldHeight = 25;
+export const nodeFieldHeight = 24;
 
 /** Immutable object that can be used to find where nodes should be positioned. */
 export interface IPositionLookup {

@@ -10,6 +10,7 @@ import * as Svg from "./svg";
 import {FieldValueType} from "../treescheme/treescheme";
 import {nodeWidth} from "../tree/positionlookup";
 import {getParent} from "../tree/path";
+import {svgRoot} from "./svg";
 
 /** Callback for when a tree is changed, returns a new immutable tree. */
 export type treeChangedCallback = (newTree: Tree.INode) => void;
@@ -27,6 +28,16 @@ export function setTree(
 
     if (root === undefined) {
         Svg.setContent(undefined);
+        svgRoot.insertAdjacentHTML('beforebegin', `<defs>
+      <pattern id="smallGrid" width="8" height="8" patternUnits="userSpaceOnUse">
+        <path d="M 8 0 L 0 0 0 8" fill="none" stroke="gray" stroke-width="0.5"/>
+      </pattern>
+      <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+        <rect width="100" height="100" fill="url(#smallGrid)"/>
+        <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#grid)" />`);
         return;
     }
 
@@ -36,23 +47,29 @@ export function setTree(
     const positionLookup = Tree.PositionLookup.createPositionLookup(root);
 
     Svg.setContent(b => {
-        positionLookup.nodes.forEach((node, index) => {
-            if(index === 0){
-                createNode(b, node, typeLookup, positionLookup, newNode => {
-                    if (changed !== undefined) {
-                        changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
-                    }
-                });
-            }
-            else
-            if(getParent(root, node).node.collapsed === false) {
-                createNode(b, node, typeLookup, positionLookup, newNode => {
-                    if (changed !== undefined) {
-                        changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
-                    }
-                });
-            }
-        });
+        positionLookup.nodes.forEach(node => {
+            createNode(b, node, typeLookup, positionLookup, newNode => {
+                if (changed !== undefined) {
+                    changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
+                }
+            });
+        // positionLookup.nodes.forEach((node, index) => {
+        //     if(index === 0){
+        //         createNode(b, node, typeLookup, positionLookup, newNode => {
+        //             if (changed !== undefined) {
+        //                 changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
+        //             }
+        //         });
+        //     }
+        //     else
+        //     if(getParent(root, node).node.collapsed === false) {
+        //         createNode(b, node, typeLookup, positionLookup, newNode => {
+        //             if (changed !== undefined) {
+        //                 changed(Tree.Modifications.treeWithReplacedNode(root, node, newNode));
+        //             }
+        //         });
+        //     }
+         });
     });
     Svg.setContentOffset(positionLookup.rootOffset);
 }
@@ -71,7 +88,7 @@ export function zoom(delta: number = 0.1): void {
 }
 
 const nodeHeaderHeight = Tree.PositionLookup.nodeHeaderHeight;
-const halfNodeHeaderHeight = Utils.half(nodeHeaderHeight);
+const halfNodeHeaderHeight = nodeHeaderHeight * .5;
 const nodeFieldHeight = Tree.PositionLookup.nodeFieldHeight;
 const nodeInputSlotOffset: Vector.IVector2 = { x: 0, y: 12.5 };
 const nodeTooltipSize: Vector.IVector2 = { x: 450, y: 75 };
@@ -102,6 +119,9 @@ function createNode(
             backgroundClass += ' ' + node.state;
         }
         else {
+            if (definition.nodeType.indexOf('$$.Root') > -1)
+                backgroundClass += ' tree-view-icon-root';
+
             if (definition.nodeType.indexOf('$$.Actions') > -1)
                 backgroundClass += ' tree-view-icon-action';
 
@@ -132,13 +152,23 @@ function createNode(
     }
 
     nodeElement.addRect(backgroundClass, size, Vector.zeroVector);
+
+    if(definition && definition.comment) {
+        const descElement = nodeElement.addElement("node-info-1", {x: 0, y: -32});
+        descElement.addRect("node-description-rect", {x: nodeWidth * .75, y: 32}, {x: 0, y: 0});
+        descElement.addText(
+            "node-description-text",
+            definition ? definition.comment || '' : '',
+            {x: 8, y: 16},
+            {x: nodeWidth * .75, y: 32});
+    }
     nodeElement.addDropdown(
         "node-type",
         typeOptionsIndex,
         typeOptions,
         /* Ugly offsets to compensate for styling of select elements */
-        { x: 10, y: halfNodeHeaderHeight - 3 },
-        { x: size.x - 10, y: nodeHeaderHeight - 5 },
+        { x: 10, y:16 },
+        { x: size.x - 10, y: 36  },
         newIndex => {
             const newNodeType = typeOptions[newIndex];
             const newNode = TreeScheme.Instantiator.changeNodeType(typeLookup.scheme, node, newNodeType);

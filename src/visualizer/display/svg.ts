@@ -198,7 +198,13 @@ export function initialize(): void {
             if (inputBlocker !== null) {
                 inputBlocker.className = "order-front";
             }
-            setOffset(Vector.add(dragOffset, pointerPos));
+
+            var grid = 8;
+
+            var nx = Math.round(pointerPos.x/grid)*grid;
+            var ny = Math.round(pointerPos.y/grid)*grid;
+
+            setOffset(Vector.add(dragOffset, {x:nx, y:ny}));
         }
     }
 
@@ -303,7 +309,7 @@ const displayMargin: Vector.IVector2 = { x: 100, y: 100 };
 const halfDisplayMargin = Vector.half(displayMargin);
 
 let svgDocument: SVGElement | undefined;
-let svgRoot: SVGGElement | undefined;
+export let svgRoot: SVGGElement | undefined;
 let viewOffset = Vector.zeroVector;
 let contentOffset = Vector.zeroVector;
 let scale = 1;

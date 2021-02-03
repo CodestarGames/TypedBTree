@@ -3,7 +3,33 @@
     rx: 10;
     ry: 10;
     stroke: #000;
-    stroke-width: 4;
+    stroke-width: 2;
+}
+
+#svg-display .node-description-rect {
+    fill: rgb(255, 247, 214) !important;
+    rx: 10;
+    ry: 10;
+    stroke: #000;
+    stroke-width: 2;
+}
+
+#svg-display .node-description-text {
+    visibility: visible;
+    display: inline-block;
+    color: #1f1f1f;
+    font-size: 10px;
+    line-height: 12px;
+    padding: 2px;
+    font-weight: bold;
+    font-family: arial;
+    max-width: 95%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#svg-display .tree-view-icon-root {
+    fill: rgb(213, 158, 158) !important
 }
 
 #svg-display .tree-view-icon-action {
@@ -32,10 +58,6 @@
 
 #svg-display .tree-view-icon-while {
     fill: rgb(224, 85, 115) !important;
-}
-
-#svg-display .tree-view-icon-root {
-    fill: rgb(99, 98, 104) !important;
 }
 
 #svg-display .tree-view-icon-flip {
@@ -76,12 +98,12 @@
 }
 
 #svg-display .node-type {
-    font-weight: bold;
+    font-weight: normal;
+    font-size: medium;
     margin-left: 8%;
-    font-size: 12px;
     width: 75%;
     height: 80%;
-    background-color: #DDDDDD36;
+    background-color: #00000036;
     cursor: pointer;
     border: none;
     margin-top: 6px;
@@ -109,6 +131,7 @@
     line-height: 12px;
     padding: 5px;
 }
+
 
 #svg-display .node-tooltip-background {
     fill: #DDD;
@@ -150,7 +173,7 @@
 }
 
 #svg-display .fieldname {
-    font-weight: bold;
+    font-family: arial;
     white-space: pre;
     pointer-events: none;
     color: white;

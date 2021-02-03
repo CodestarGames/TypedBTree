@@ -34,11 +34,11 @@ export function duplicateWithMissingFields(scheme: TreeScheme.IScheme, tree: Tre
         if (definition === undefined) {
             throw new Error(`Unable to find definition for node-type: ${node.type}`);
         }
-        return Tree.createNode(definition.nodeType, node.collapsed, b => {
+        return Tree.createNode(definition.nodeType, node.collapsed, node.state, b => {
             // Copy fields from the original if it has them, otherwise create defaults.
             definition.fields.forEach(f => {
                 const orgField = node.getField(f.name);
-                b.pushState(node.state);
+                b.pushState(node.state || 'ready');
                 b.pushCollapsed(node.collapsed);
                 if (orgField !== undefined) {
                     // 'node' and 'nodeArray' need deep-copying, the rest we can use as-is.
@@ -80,7 +80,7 @@ export function changeNodeType(scheme: TreeScheme.IScheme, node: Tree.INode, new
     if (newNodeDefinition === undefined) {
         throw new Error(`New node-type ${newNodeType} cannot be found in the given scheme`);
     }
-    return Tree.createNode(newNodeType, node.collapsed, b => {
+    return Tree.createNode(newNodeType, node.collapsed, node.state, b => {
         newNodeDefinition.fields.forEach(f => {
             /* If the field of the original node is compatible then use that, otherwise create a new
             default field. */
@@ -118,7 +118,7 @@ export function instantiateDefaultNodeType(scheme: TreeScheme.IScheme, nodeType:
  * @returns Newly created node.
  */
 export function instantiateDefaultNode(nodeDefinition: TreeScheme.INodeDefinition): Tree.INode {
-    return Tree.createNode(nodeDefinition.nodeType, false, b => {
+    return Tree.createNode(nodeDefinition.nodeType, false, 'ready', b => {
         nodeDefinition.fields.forEach(f => {
             const field = instantiateDefaultField(f);
             b.pushField(field);
